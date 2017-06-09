@@ -65,6 +65,10 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="app\js\xmlToJSON.js" />
+    <Content Include="app\scripts\directives\generator\generator.html" />
+    <Content Include="app\scripts\directives\generator\generator.js" />
+    <Content Include="app\views\pages\generateTests.html" />
     <Content Include="packages.config" />
     <Content Include="app\.buildignore" />
     <Content Include="app\.htaccess" />

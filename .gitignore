@@ -4,3 +4,5 @@ src/PSIOG.Workbench/.vs/config/applicationhost.config
 src/PSIOG.Workbench/bin/
 src/PSIOG.Workbench/obj/
 src/PSIOG.WorkbenchAPI/obj/
+src/packages/
+src/.vs/PSIOG.Workbench/v14/.suo

@@ -60,11 +60,11 @@
                 <!-- /.nav-second-level -->
             </li>
             <li ng-class="{active: collapseVar==2}">
-                <a href="" ng-click="check(2)"><i class="fa fa-sitemap fa-fw"></i> Multi-Level Dropdown<span
+                <a href="" ng-click="check(2)"><i class="fa fa-sitemap fa-fw"></i>Generate Test Scenarios<span
                         class="fa arrow"></span></a>
                 <ul class="nav nav-second-level" collapse="collapseVar!=2">
-                    <li>
-                        <a href="">Second Level Item</a>
+                    <li ui-sref-active="active">
+                        <a ui-sref="dashboard.generateTests">Generate!</a>
                     </li>
                     <li>
                         <a href="">Second Level Item</a>

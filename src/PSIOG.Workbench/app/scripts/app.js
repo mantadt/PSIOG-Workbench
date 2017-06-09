@@ -7,7 +7,7 @@
  *
  * Main module of the application.
  */
-angular
+var app = angular
   .module('sbAdminApp', [
     'oc.lazyLoad',
     'ui.router',
@@ -36,7 +36,9 @@ angular
                     'scripts/directives/header/header.js',
                     'scripts/directives/header/header-notification/header-notification.js',
                     'scripts/directives/sidebar/sidebar.js',
-                    'scripts/directives/sidebar/sidebar-search/sidebar-search.js'
+                    'scripts/directives/sidebar/sidebar-search/sidebar-search.js',
+                    
+                    'scripts/directives/generator/generator.js'
                     ]
                 }),
                 $ocLazyLoad.load(
@@ -85,7 +87,8 @@ angular
               files:[
               'scripts/controllers/main.js',
               'scripts/directives/timeline/timeline.js',
-              'scripts/directives/notifications/notifications.js',
+                  'scripts/directives/notifications/notifications.js',
+              'scripts/directives/generator/generator.js',
               'scripts/directives/chat/chat.js',
               'scripts/directives/dashboard/stats/stats.js'
               ]
@@ -156,7 +159,29 @@ angular
       .state('dashboard.grid',{
        templateUrl:'views/ui-elements/grid.html',
        url:'/grid'
-   })
-  }]);
+        })
+      .state('dashboard.generateTests', {
+       templateUrl: 'views/pages/generateTests.html',
+       url: '/generateTests'
+  })
+    }]);
 
-    
+
+//Service to Generate all combinations of flows
+app.factory('generatorService', ['$http', function ($http) {
+    var data = { name: 'MS' };
+    var urlBase = 'http://localhost:3000/';
+    return {
+        generateFromXml: function (xmlData) {
+            var formData = new FormData();
+            //formData.append("xmlData", "DSDS");
+            //console.log(xmlData, formData.getAll('xmlData'));
+            return $http.post(urlBase+"generateFromXml/", $.param({'xmlData': xmlData}), { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
+        },
+
+        getCall: function () {
+            return $http.get(urlBase)
+        }
+    }
+}]);
+

@@ -59,7 +59,7 @@ app.post('/addCoordinates', data.addCoordinates);
 //app.delete('/deleteCoordinates', coordinates.deleteCoordinates);
 //app.put('/updateCoordinates/:id', coordinates.updateCoordinates);
 
-//Pass formData with key:xmlaData and value as the XML string
+//Pass formData with key:xmlaData and value as the XML string and returns object with results, nodes and links []
 app.post('/generateFromXml',function (req, res){
 
 
@@ -74,7 +74,7 @@ app.post('/generateFromXml',function (req, res){
 
 });
 
-//Pass an object with parameters --> nodes[] and links[]
+//Pass an object with parameters --> nodes[] and links[] and returns object with results, nodes and links []
 app.post('/generateFromJson',function (req, res){
 
 

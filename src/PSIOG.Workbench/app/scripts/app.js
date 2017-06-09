@@ -179,6 +179,10 @@ app.factory('generatorService', ['$http', function ($http) {
             return $http.post(urlBase+"generateFromXml/", $.param({'xmlData': xmlData}), { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
         },
 
+        generateFromJson: function (jsonData) {
+            return $http.post(urlBase + "generateFromJson/", jsonData, { headers: { 'Content-Type': 'application/json' } })
+        }
+
         getCall: function () {
             return $http.get(urlBase)
         }

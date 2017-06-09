@@ -1,15 +1,17 @@
 {
-  "name": "PSIOGworkbench",
+  "name": "psiogworkbench",
   "version": "0.0.0",
   "description": "workbench",
   "main": "app.js",
-  "author": {
-    "name": "Dhananjay",
-    "email": ""
-  },
+  "author": "Dhananjay",
   "dependencies": {
     "express": "^3.4.4",
     "jade": "*",
     "stylus": "^0.54.5"
-  }
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "license": "ISC"
 }

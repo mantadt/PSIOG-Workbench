@@ -53,7 +53,7 @@ exports.getFlowChartByID = function (req, res) {
     MongoClient.connect(url, function (err, db) {
         if (!err) {
 
-            var query = { _id: req.params.id };
+            var query = { flowChartID: req.params.id };
             db.collection("Flowchart").find(query).toArray(function (err, result) {
                 if (err) throw err;
                 res.status(200).json({ 'Flowchart': result });

@@ -9,6 +9,8 @@ var http = require('http');
 var path = require('path');
 var data = require('./public/javascripts/data.js');
 var coordinates = require('./public/javascripts/ManageCoordinates.js');
+var flowChart = require('./public/javascripts/ManageFlowChart.js');
+
 
 
 var app = express();
@@ -42,13 +44,19 @@ app.get('/products',data.getProducts);
 app.post('/products',data.addProduct);
 app.delete('/products/:id',data.deleteProduct);
 app.put('/products/:id', data.updateProduct);
-app.get('/CheckConnection', data.getConnectionStatus);
+app.get('/CheckConnection', coordinates.getConnectionStatus);
 
-app.get('/getCoordinates', data.getCoordinates);
-app.post('/addCoordinates', data.addCoordinates);
+app.get('/getCoordinates', coordinates.getCoordinates);
+app.post('/addCoordinates', coordinates.addCoordinates);
 //app.delete('/deleteCoordinates', coordinates.deleteCoordinates);
 //app.put('/updateCoordinates/:id', coordinates.updateCoordinates);
 
+
+app.get('/getAllFlowCharts', flowChart.getAllFlowCharts);
+app.get('/getAllFlowChartNames', flowChart.getAllFlowChartNames);
+app.post('/addFlowchart', flowChart.addFlowchart);
+app.get('/getFlowChartByID/:id', flowChart.getFlowChartByID);
+app.get('/getFlowChartByName/:id', flowChart.getFlowChartByName);
 
 
 

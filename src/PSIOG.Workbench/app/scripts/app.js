@@ -21,7 +21,7 @@ angular
       events:true,
     });
 
-    $urlRouterProvider.otherwise('/dashboard/home');
+    $urlRouterProvider.otherwise('/dashboard/CreateFlowChart');
 
     $stateProvider
       .state('dashboard', {
@@ -136,6 +136,10 @@ angular
         .state('dashboard.CreateFlowChart', {
             templateUrl: 'views/ui-elements/CreateFlowChart.html',
             url: '/CreateFlowChart'
+        })
+       .state('dashboard.ViewFlowChart', {
+            templateUrl: 'views/ui-elements/ViewFlowChart.html',
+            url: '/ViewFlowChart'
         })
       .state('dashboard.buttons',{
         templateUrl:'views/ui-elements/buttons.html',

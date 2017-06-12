@@ -48,6 +48,11 @@ app.get('/CheckConnection', coordinates.getConnectionStatus);
 
 app.get('/getCoordinates', coordinates.getCoordinates);
 app.post('/addCoordinates', coordinates.addCoordinates);
+app.get('/getCoordbyFlowId/:flowId', coordinates.getCoordbyFlowId);
+
+//app.get('/getCoordinates', coordinates.getAssestsByFlowChart);
+
+
 //app.delete('/deleteCoordinates', coordinates.deleteCoordinates);
 //app.put('/updateCoordinates/:id', coordinates.updateCoordinates);
 

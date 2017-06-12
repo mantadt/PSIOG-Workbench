@@ -627,6 +627,13 @@
                         });
            
         }
+         $scope.SelectFile=
+             function () {
+            alert('SelectFile calls');
+
+
+                    }
+
     });
 
 function showPorts(node, show) {
@@ -749,6 +756,7 @@ var CLIENT_ID = '523816527790-iudprk57d1nu0lpo28gndlt35gt3kocm.apps.googleuserco
                         if (isSignedIn) {
                             authorizeButton.style.display = 'none';
                             signoutButton.style.display = 'block';
+                            listFiles();
                         } else {
                             authorizeButton.style.display = 'block';
                             signoutButton.style.display = 'none';
@@ -1011,4 +1019,75 @@ var CLIENT_ID = '523816527790-iudprk57d1nu0lpo28gndlt35gt3kocm.apps.googleuserco
                             document.getElementById("viewList").style.display = "none";
                             document.getElementById("viewError").style.display = "";
                         }
+                    }
+
+   function listFiles() {
+
+                        var select = document.getElementById('ddlJsonList');
+                        var selectddlFiles = document.getElementById('ddlFiles');
+
+                        $('select').empty();
+
+                        var opti = document.createElement('option');
+                        var optiTestcase = document.createElement('option');
+
+                        optiTestcase.value = 0;
+                        optiTestcase.innerHTML = "-Select-";
+
+                        opti.value = 0;
+                        opti.innerHTML = "-Select-";
+                        select.appendChild(opti);
+
+
+                        gapi.client.drive.files.list({
+                            'pageSize': 10,
+                            'fields': "nextPageToken, files(id, name)",
+                            'q': "'0BzoDXFs-7vFSV3RiLWs0M3hDWWM' in parents"
+                        }).then(function (response) {
+                            appendPre('Files:');
+                            var files = response.result.files;
+                            if (files && files.length > 0) {
+                                for (var i = 0; i < files.length; i++) {
+                                    var file = files[i];
+                                    //appendPre(file.name);
+                                    var opt = document.createElement('option');
+                                    var optTestcase = document.createElement('option');
+
+                                    optTestcase.value = file.id;
+                                    optTestcase.innerHTML = file.name;
+
+                                    opt.value = file.id;
+                                    opt.innerHTML = file.name;
+                                    select.appendChild(opt);
+                                }
+                            } else {
+                                appendPre('No files found.');
+                            }
+                        });
+                    }
+   function appendPre(message) {
+                        var pre = document.getElementById('content');
+                        var textContent = document.createTextNode(message + '\n');
+                        pre.appendChild(textContent);
+                    }
+
+
+
+   $('#ddlJsonList').change(function () {
+                            $("#divOuterBodder").css("display", "");
+                            printFile($('#ddlJsonList').val());
+                        });
+   function printFile(fileId) {
+                        var accessToken = gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().access_token;
+                        var xhr = new XMLHttpRequest();
+                        xhr.open("GET", "https://www.googleapis.com/drive/v3/files/" + fileId + '?alt=media', true);
+                        xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
+                        xhr.responseType = 'text';
+                        xhr.onload = function () {
+                            var jsonFile = xhr.response;
+                            var jsondata = JSON.parse(xhr.response);
+                            $("#mySavedModel").val(jsondata);
+                            myDiagram.model = go.Model.fromJson(jsondata);
+                        }
+                        xhr.send();
                     }

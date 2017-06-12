@@ -47,3 +47,22 @@ exports.getCoordinates = function (req, res) {
         }
     });
 };
+
+exports.getCoordbyFlowId = function (req, res) {
+    MongoClient.connect(url, function (err, db) {
+        if (!err) {
+
+              var query = { flowchartID: req.params.flowId };
+            db.collection("Coordinates").find(query).toArray(function (err, Coordinates) {;
+                res.status(200).json({ 'Coordinates': Coordinates });
+            });
+        }
+        else {
+            res.send("failure");
+        }
+    });
+};
+
+
+
+

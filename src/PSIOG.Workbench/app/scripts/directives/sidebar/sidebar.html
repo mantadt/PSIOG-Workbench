@@ -45,7 +45,7 @@
             <li ng-class="{active: collapseVar==3}">
                 {{dropDown}}
                 <a href="" ng-click="check(3)">
-                    <i class="fa fa-wrench fa-fw"></i>Flow Chart<span class="fa arrow"></span>
+                    <i class="fa fa-wrench fa-fw"></i>Business Flows<span class="fa arrow"></span>
                 </a>
                 <ul class="nav nav-second-level" collapse="collapseVar!=3">
                     <li ui-sref-active="active">
@@ -57,6 +57,21 @@
                     <li ui-sref-active="active">
                         <a ui-sref="dashboard.ViewFlowChart">View Flowchart</a>
                     </li>
+                </ul>
+                <!-- /.nav-second-level -->
+            </li>
+            <li ng-class="{active: collapseVar==2}">
+                {{dropDown}}
+                <a href="" ng-click="check(2)">
+                    <i class="fa fa-wrench fa-fw"></i>Usability<span class="fa arrow"></span>
+                </a>
+                <ul class="nav nav-second-level" collapse="collapseVar!=2">
+                    <li ui-sref-active="active">
+                        <a ui-sref="dashboard.CreateUsability">Create Usability Texts</a>
+                    </li>   
+                    <li ui-sref-active="active">
+                        <a ui-sref="dashboard.ViewPresentations">View Usability Presentations</a>
+                    </li>   
                 </ul>
                 <!-- /.nav-second-level -->
             </li>

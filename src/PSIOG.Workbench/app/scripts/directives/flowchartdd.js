@@ -17,6 +17,10 @@
                     scope.itemSelected = response.data.flowchart[0];
                 }, function errorCallback(response) {
                     console.log(response.statusText);
+                    });
+
+                scope.$watch("itemSelected", function () {
+                    scope.ddlValueChanged();
                 });
             }
         }

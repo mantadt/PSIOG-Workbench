@@ -536,8 +536,7 @@
             }
         };
     })
-
-
+   
     .controller('MinimalCtrl', function ($scope, $rootScope, $http) {
         $scope.model = new go.GraphLinksModel(
             [
@@ -627,15 +626,45 @@
                         });
            
         }
-         $scope.SelectFile=
-             function () {
+         $scope.SelectFile= function () {
             alert('SelectFile calls');
-
-
+                 // printFile($('#ddlJsonList').val(),$scope);
                     }
 
-    });
+        $scope.LoadFile= function ()
+            {
+        listFiles($scope);
+            }
+        $scope.ddlValueChanged = function(){
+            if($scope.itemSelected)
+                {
+            var floID=$scope.itemSelected.flowChartID;
+        alert(floID);
 
+         $http({
+                method: 'GET',
+                url: 'http://192.168.10.132:1337/getFlowChartByID/'+floID,
+                data: '',
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                }
+            }).then(function successCallback(response) {
+               
+               $scope.model = go.Model.fromJson(response.data.Flowchart[0]);
+
+            }, function errorCallback(response) {
+                console.log(response.statusText);
+            });
+                }
+
+}
+});
+
+        //angular.element(document).ready(function(){
+        //     listFiles();
+        //})
+         //$scope.listFiles = ();
+    
 function showPorts(node, show) {
     var diagram = node.diagram;
     if (!diagram || diagram.isReadOnly || !diagram.allowLink) return;
@@ -740,7 +769,6 @@ var CLIENT_ID = '523816527790-iudprk57d1nu0lpo28gndlt35gt3kocm.apps.googleuserco
                             scope: SCOPES
                         }).then(function () {
                             gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
-
                             updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
                             authorizeButton.onclick = handleAuthClick;
                             signoutButton.onclick = handleSignoutClick;
@@ -756,7 +784,7 @@ var CLIENT_ID = '523816527790-iudprk57d1nu0lpo28gndlt35gt3kocm.apps.googleuserco
                         if (isSignedIn) {
                             authorizeButton.style.display = 'none';
                             signoutButton.style.display = 'block';
-                            listFiles();
+                            //listFiles();
                         } else {
                             authorizeButton.style.display = 'block';
                             signoutButton.style.display = 'none';
@@ -869,7 +897,7 @@ var CLIENT_ID = '523816527790-iudprk57d1nu0lpo28gndlt35gt3kocm.apps.googleuserco
 
                         if (returnResult.assets.length > 0) {
                             var accessToken = gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().access_token;
-                            var divString = "<section class='regular slider'>";
+                            var divString = "<section class='regular slider sortable'>";
 
                             var viewList = document.getElementById("viewList");
                             for (var iLoop = 0; iLoop < returnResult.assets.length; iLoop++) {
@@ -912,7 +940,7 @@ var CLIENT_ID = '523816527790-iudprk57d1nu0lpo28gndlt35gt3kocm.apps.googleuserco
                                     xhr.send();
 
                                     //checkXHRAvailable();
-                                    await sleep(2000);
+                                    await sleep(10000);
                                     jLoop++;
                                 }
                                 else if (values.visited)
@@ -1021,49 +1049,28 @@ var CLIENT_ID = '523816527790-iudprk57d1nu0lpo28gndlt35gt3kocm.apps.googleuserco
                         }
                     }
 
-   function listFiles() {
+   function listFiles($scope) {
 
-                        var select = document.getElementById('ddlJsonList');
-                        var selectddlFiles = document.getElementById('ddlFiles');
+       if($('#ddlJsonList').css('display') == 'block'){ 
+            $http({
+                method: 'GET',
+                url: 'http://192.168.10.132:1337/getAllFlowChartNames',
+                data: data,
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                }
+            }).then(function successCallback(response) {
+                $scope.FlowchartName = response.data;
+                alert(JSON.stringify($scope.employees));
+            }, function errorCallback(response) {
+                console.log(response.statusText);
+            });
+        
+           }
+       else
+           {
 
-                        $('select').empty();
-
-                        var opti = document.createElement('option');
-                        var optiTestcase = document.createElement('option');
-
-                        optiTestcase.value = 0;
-                        optiTestcase.innerHTML = "-Select-";
-
-                        opti.value = 0;
-                        opti.innerHTML = "-Select-";
-                        select.appendChild(opti);
-
-
-                        gapi.client.drive.files.list({
-                            'pageSize': 10,
-                            'fields': "nextPageToken, files(id, name)",
-                            'q': "'0BzoDXFs-7vFSV3RiLWs0M3hDWWM' in parents"
-                        }).then(function (response) {
-                            appendPre('Files:');
-                            var files = response.result.files;
-                            if (files && files.length > 0) {
-                                for (var i = 0; i < files.length; i++) {
-                                    var file = files[i];
-                                    //appendPre(file.name);
-                                    var opt = document.createElement('option');
-                                    var optTestcase = document.createElement('option');
-
-                                    optTestcase.value = file.id;
-                                    optTestcase.innerHTML = file.name;
-
-                                    opt.value = file.id;
-                                    opt.innerHTML = file.name;
-                                    select.appendChild(opt);
-                                }
-                            } else {
-                                appendPre('No files found.');
-                            }
-                        });
+       }
                     }
    function appendPre(message) {
                         var pre = document.getElementById('content');
@@ -1077,7 +1084,7 @@ var CLIENT_ID = '523816527790-iudprk57d1nu0lpo28gndlt35gt3kocm.apps.googleuserco
                             $("#divOuterBodder").css("display", "");
                             printFile($('#ddlJsonList').val());
                         });
-   function printFile(fileId) {
+   function printFile(fileId,$scope) {
                         var accessToken = gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().access_token;
                         var xhr = new XMLHttpRequest();
                         xhr.open("GET", "https://www.googleapis.com/drive/v3/files/" + fileId + '?alt=media', true);
@@ -1086,8 +1093,9 @@ var CLIENT_ID = '523816527790-iudprk57d1nu0lpo28gndlt35gt3kocm.apps.googleuserco
                         xhr.onload = function () {
                             var jsonFile = xhr.response;
                             var jsondata = JSON.parse(xhr.response);
-                            $("#mySavedModel").val(jsondata);
-                            myDiagram.model = go.Model.fromJson(jsondata);
+                           // $("#mySavedModel").val(jsondata);
+                            $scope.model.diagram = go.Model.fromJson(jsondata);
                         }
                         xhr.send();
                     }
+

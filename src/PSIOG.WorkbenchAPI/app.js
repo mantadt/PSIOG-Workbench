@@ -49,6 +49,8 @@ app.get('/CheckConnection', coordinates.getConnectionStatus);
 app.get('/getCoordinates', coordinates.getCoordinates);
 app.post('/addCoordinates', coordinates.addCoordinates);
 app.get('/getCoordbyFlowId/:flowId', coordinates.getCoordbyFlowId);
+app.get('/getCoordbyFlowIdBlockID/:id', coordinates.getCoordbyFlowIdBlockID);
+
 
 //app.get('/getCoordinates', coordinates.getAssestsByFlowChart);
 
@@ -62,6 +64,8 @@ app.get('/getAllFlowChartNames', flowChart.getAllFlowChartNames);
 app.post('/addFlowchart', flowChart.addFlowchart);
 app.get('/getFlowChartByID/:id', flowChart.getFlowChartByID);
 app.get('/getFlowChartByName/:id', flowChart.getFlowChartByName);
+
+
 
 
 

@@ -37,7 +37,7 @@ exports.getAllFlowCharts = function (req, res) {
 exports.getAllFlowChartNames = function (req, res) {
     MongoClient.connect(url, function (err, db) {
         if (!err) {
-            var collection = db.collection('Flowchart').find({}, { item: 1, Name: 1 })
+            var collection = db.collection('Flowchart').find({},{"flowChartID" : 1,"flowchartName" : 2,_id : 0})
             .toArray(function (err, flowchart) {
                 // so now, we can return all students to the screen.
                 res.status(200).json({flowchart });

@@ -68,10 +68,12 @@
     <Content Include="app\img\ellipsis.gif" />
     <Content Include="app\js\pnotify.custom.min.js" />
     <Content Include="app\scripts\darkbox.js" />
+    <Content Include="app\scripts\directives\flowchartdd.js" />
     <Content Include="app\scripts\Guid.js" />
     <Content Include="app\scripts\require.js" />
     <Content Include="app\styles\darkbox.css" />
     <Content Include="app\styles\pnotify.custom.min.css" />
+    <Content Include="app\views\ui-elements\ViewFlowChart.html" />
     <Content Include="bower_components\angular-file-upload\.gitignore" />
     <Content Include="bower_components\angular-file-upload\dist\angular-file-upload.js" />
     <Content Include="bower_components\angular-file-upload\dist\angular-file-upload.min.js" />
@@ -688,6 +690,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="app\assests\" />
+    <Folder Include="app\scripts\directives\flowchart\view\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

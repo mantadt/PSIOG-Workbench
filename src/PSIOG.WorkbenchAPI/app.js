@@ -9,9 +9,14 @@ var http = require('http');
 var path = require('path');
 var data = require('./public/javascripts/data.js');
 var coordinates = require('./public/javascripts/ManageCoordinates.js');
+var flowChart = require('./public/javascripts/ManageFlowChart.js');
+var cors = require('cors')
 
 
 var app = express();
+
+ 
+app.use(cors())
 
 // all environments
 app.set('port', process.env.PORT || 3000);
@@ -35,19 +40,41 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
+
 app.get('/', routes.index);
 app.get('/users', user.list);
+
 
 app.get('/products',data.getProducts);
 app.post('/products',data.addProduct);
 app.delete('/products/:id',data.deleteProduct);
 app.put('/products/:id', data.updateProduct);
-app.get('/CheckConnection', data.getConnectionStatus);
+app.get('/CheckConnection', coordinates.getConnectionStatus);
 
-app.get('/getCoordinates', data.getCoordinates);
-app.post('/addCoordinates', data.addCoordinates);
+app.get('/getCoordinates', coordinates.getCoordinates);
+app.post('/addCoordinates', coordinates.addCoordinates);
+app.get('/getCoordbyFlowId/:flowId', coordinates.getCoordbyFlowId);
+app.get('/getCoordbyFlowIdBlockID/:id', coordinates.getCoordbyFlowIdBlockID);
+
+
+//app.get('/getCoordinates', coordinates.getAssestsByFlowChart);
+
+
 //app.delete('/deleteCoordinates', coordinates.deleteCoordinates);
 //app.put('/updateCoordinates/:id', coordinates.updateCoordinates);
+
+
+app.get('/getAllFlowCharts', flowChart.getAllFlowCharts);
+app.get('/getAllFlowChartNames', flowChart.getAllFlowChartNames);
+app.post('/addFlowchart', flowChart.addFlowchart);
+app.get('/getFlowChartByID/:id', flowChart.getFlowChartByID);
+app.get('/getFlowChartByName/:id', flowChart.getFlowChartByName);
+app.get('/getFlowChartByFlowIdBlockId/:flowId/:blockId', flowChart.getFlowChartByFlowIdBlockId);
+app.post('/updateFlowchartByID', flowChart.updateFlowchartByID);
+
+
+
+
 
 
 

@@ -87,7 +87,6 @@
 </style>
 
 
-
 <div>
 
    
@@ -105,43 +104,42 @@
         <div class="col-lg-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    Create New
-                </div><div class="panel-body">
+View Flowchart
+                </div><div class="panel-body" ng-controller="MinimalCtrl">
                     <div class="row">
                         <div class="col-lg-6">
                             <form role="form">
-                                <div class="form-group">
-                                    
-
-                                    <label>FileName</label>
-                                    <input class="form-control" id="txtFileName" placeholder="Enter text">
+                                <div class="form-group" >
+                                    <label>Choose File</label>
+                                    <div class="form-group"  >
+                                        <flowchartddl></flowchartddl>
+                                    </div>
+                                    <!--<label>FileName</label>
+                                    <input class="form-control" id="txtFileName" placeholder="Enter text">-->
                                 </div>
 
 
                             </form>
                         </div>
-                        <div class="col-lg-12" ng-controller="MinimalCtrl">
+                        <div class="col-lg-12" >
                             <form role="form">
                                 <div class="form-group">
-                                    <div class="form-group">
-                                        <select class="form-control" style="display:none" id="ddlJsonList"></select>
-                                    </div>
                                     <div >
                                         <div id="sample">
                                             
                                             <div style="width: 100%; white-space: nowrap;">
-                                                <span style="display: inline-block; vertical-align: top; width: 100px">
-                                                    <go-Palatte go-model="model" op="1" style="border: solid 1px black; height: 500px"></go-Palatte>
+                                                <!--<span style="display: inline-block; vertical-align: top; width: 100px">
+                                                    <go-Palatte go-model="model" style="border: solid 1px black; height: 500px"></go-Palatte>
 
-                                                </span>
+                                                </span>-->
                                                 <span style="display: inline-block; vertical-align: top; width: 80%">
-                                                    <go-diagram go-model="model" style="border: solid 1px black; height: 500px"></go-diagram>
+                                                    <go-diagram go-model="model" op="2" style="border: solid 1px black; height: 500px"></go-diagram>
 
                                                 </span>
                                             </div>
                                             <div>
                                                 <br />
-                                                <button type="button" ng-click="saveFlowChart()"  class="btn btn-primary">Save</button>
+                                                <button type="button" ng-click="saveFlowChart()" style="display:none"  class="btn btn-primary">Save</button>
                                              
                                             </div>
 
@@ -150,7 +148,6 @@
                                             </div>
                                         </div>
                                     </div>
-
                                     <div id="myModal" class="modal modalpopup">
 
                                         <!-- Modal content -->

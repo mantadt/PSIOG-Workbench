@@ -10,10 +10,13 @@ var path = require('path');
 var data = require('./public/javascripts/data.js');
 var coordinates = require('./public/javascripts/ManageCoordinates.js');
 var flowChart = require('./public/javascripts/ManageFlowChart.js');
-
+var cors = require('cors')
 
 
 var app = express();
+
+ 
+app.use(cors())
 
 // all environments
 app.set('port', process.env.PORT || 3000);
@@ -37,8 +40,10 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
+
 app.get('/', routes.index);
 app.get('/users', user.list);
+
 
 app.get('/products',data.getProducts);
 app.post('/products',data.addProduct);
@@ -64,6 +69,11 @@ app.get('/getAllFlowChartNames', flowChart.getAllFlowChartNames);
 app.post('/addFlowchart', flowChart.addFlowchart);
 app.get('/getFlowChartByID/:id', flowChart.getFlowChartByID);
 app.get('/getFlowChartByName/:id', flowChart.getFlowChartByName);
+app.get('/getFlowChartByFlowIdBlockId/:flowId/:blockId', flowChart.getFlowChartByFlowIdBlockId);
+app.post('/updateFlowchartByID', flowChart.updateFlowchartByID);
+
+
+
 
 
 

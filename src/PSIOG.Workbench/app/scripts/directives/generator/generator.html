@@ -1,33 +1,77 @@
 <div class="panel-body">
-    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+    <iv class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
        
                 <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
                     
-                    <div class="mdl-card mdl-cell mdl-cell--12-col" id="pastexml" ng-show="pastexml">
-                        <div class="mdl-card__supporting-text mdl-grid mdl-grid--no-spacing">
-                            <h4 class="mdl-cell mdl-cell--12-col">Paste the XML content</h4>
-
-                            <div class="section__text mdl-cell mdl-cell--10-col-desktop mdl-cell--6-col-tablet mdl-cell--3-col-phone">
-                                <textarea ng-model="xmlpaste"  rows="6" cols="100"></textarea>
-                                <br />
-                                <!--<div>
-                                    <h5>Pick a file from Google Drive</h5>
-
-                                    <button id="authorize-button" style="display: none;">Authorize</button>
-                                    <button id="signout-button" style="display: none;">Sign Out</button>
-
-                                    <pre id="content"></pre>
-
-
-                                </div>-->
+                    <div id="pastexml" ng-show="pastexml">
+                       
+                            <div style="float:right">
+                                <label class="switch">
+                                    <input type="checkbox" ng-click="toggleJsonXml()">
+                                    <div class="slider round"></div>
+                                </label>
                             </div>
-                        
+
+                            <div style="float:left">
+                                <div class="mdl-card__supporting-text mdl-grid mdl-grid--no-spacing" ng-show="!jsonxmltoggle">
+                                    <h4 class="mdl-cell mdl-cell--12-col">Paste the XML content</h4>
+
+                                    <div class="section__text mdl-cell mdl-cell--10-col-desktop mdl-cell--6-col-tablet mdl-cell--3-col-phone">
+                                        <textarea ng-model="xmlpaste" rows="6" cols="100"></textarea>
+                                        <br />
+                                        <!--<div>
+                        <h5>Pick a file from Google Drive</h5>
+
+                        <button id="authorize-button" style="display: none;">Authorize</button>
+                        <button id="signout-button" style="display: none;">Sign Out</button>
+
+                        <pre id="content"></pre>
+
+
+                    </div>-->
+                                    </div>
+                                    <div>
+                                        <button id="generatebuttonJSON" class="mdl-button" style="color:black" ng-click="clickedGenerateJSON(false)">Click to Generate Test Cases</button>
+                                    </div>
+
+
+                                </div>
+                            
+
+                            <div class="mdl-card__supporting-text mdl-grid mdl-grid--no-spacing" ng-show="jsonxmltoggle">
+                                <h4 class="mdl-cell mdl-cell--12-col">Pick the JSON file!</h4>
+
+                                <div class="section__text mdl-cell mdl-cell--10-col-desktop mdl-cell--6-col-tablet mdl-cell--3-col-phone">
+                                    <select id="jsonpicker" ng-model="jsonpicker" ng-options="file for file in jsonfiles"> {{file}}</select>
+
+                                    <br />
+                                    <br /><br />
+                                    <!--<div>
+                    <h5>Pick a file from Google Drive</h5>
+
+                    <button id="authorize-button" style="display: none;">Authorize</button>
+                    <button id="signout-button" style="display: none;">Sign Out</button>
+
+                    <pre id="content"></pre>
+
+
+                </div>-->
+                                </div>
+                                <div>
+                                    <button id="generatebutton" class="mdl-button" style="color:black" ng-click="clickedGenerate(false)">Click to Generate Test Cases</button>
+                                </div>
+
+
+                            </div>
 
                         </div>
-                        <div class="mdl-card__actions" >
-                            <button id="generatebutton" class="mdl-button" style="color:black" ng-click="clickedGenerate(false)">Click to Generate Test Cases</button>
-                        </div>
+
+                       
                     </div>
+
+                        
+                   
+                    
                     <div class="mdl-card mdl-cell mdl-cell--12-col" id="loader" ng-show="loader" >
                         <div class="mdl-card__supporting-text mdl-grid mdl-grid--no-spacing">
                             <h4 class="mdl-cell mdl-cell--12-col">Generating Test Cases..</h4>
@@ -99,5 +143,74 @@
                     
                 </section>
 
+
+
     </div>
 </div>
+
+
+<!--CSS-->
+
+<style>
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+    }
+
+        .switch input {
+            display: none;
+        }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+    input:checked + .slider {
+        background-color: #2196F3;
+    }
+
+    input:focus + .slider {
+        box-shadow: 0 0 1px #2196F3;
+    }
+
+    input:checked + .slider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+    }
+
+    /* Rounded sliders */
+    .slider.round {
+        border-radius: 34px;
+    }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+    .wrap {
+        width: 85%;
+    }
+
+</style>

@@ -19,6 +19,11 @@ angular.module('sbAdminApp')
             link: function (scope) {
                 scope.xmlpaste = '';
                 scope.pastexml = true;
+                scope.jsonxmltoggle = true;
+                scope.toggleJsonXml = function () {
+                    scope.jsonxmltoggle = !scope.jsonxmltoggle;
+                }
+                scope.jsonfiles = ["1.json", "2.json"];
                 var nodes = [];
                 var links = [];
                 var outp = [];
@@ -33,6 +38,58 @@ angular.module('sbAdminApp')
                         scope.loader = true;
                         scope.pastexml = false;
                         generatorService.generateFromXml(scope.xmlpaste)
+                            .then(function (success) {
+
+                                scope.loader = false;
+                                scope.results = true;
+                                nodes = success.data.nodes;
+                                links = success.data.links;
+                                resultsData = success.data.results;
+                                outp = resultsData;
+                                jQuery('<option/>', {
+                                    value: -1,
+                                    html: " "
+                                }).appendTo('#startNode');
+
+                                for (var i = 0; i < nodes.length; i++) {
+                                    //creates option tag
+                                    jQuery('<option/>', {
+                                        value: nodes[i].id,
+                                        html: nodes[i].text
+                                    }).appendTo('#startNode'); //appends to select if parent div has id dropdown
+                                }
+
+                                jQuery('<option/>', {
+                                    value: -1,
+                                    html: " "
+                                }).appendTo('#endNode');
+
+
+                                for (var i = 0; i < nodes.length; i++) {
+                                    //creates option tag
+                                    jQuery('<option/>', {
+                                        value: nodes[i].id,
+                                        html: nodes[i].text
+                                    }).appendTo('#endNode'); //appends to select if parent div has id dropdown
+                                }
+                                scope.startNode = -1;
+                                scope.endNode = -1;
+
+                                scope.displayCombinations(outp, nodes, links);
+                                console.log(success);
+                            }, function (failure) { console.log(failure); });
+                    }
+                }
+
+                scope.clickedGenerateJSON = function (flag) {
+
+                    if (flag)
+                    { scope.displayCombinations(outp, nodes, links); }
+                    else {
+                        scope.loader = true;
+                        scope.pastexml = false;
+                        //Pass on the JSON file name, pull in the JSON data, and send it to the generator Service
+                        generatorService.generateFromJson()
                             .then(function (success) {
 
                                 scope.loader = false;

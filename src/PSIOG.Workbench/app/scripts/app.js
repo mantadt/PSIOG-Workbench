@@ -180,8 +180,8 @@ app.factory('generatorService', ['$http', function ($http) {
         },
 
         generateFromJson: function (jsonData) {
-            return $http.post(urlBase + "generateFromJson/", jsonData, { headers: { 'Content-Type': 'application/json' } })
-        }
+            return $http.post(urlBase + "generateFromJson/", jsonData, { headers: { 'Content-Type': 'application/json' } });
+        },
 
         getCall: function () {
             return $http.get(urlBase)

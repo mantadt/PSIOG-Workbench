@@ -2,6 +2,7 @@
     <div class="sidebar-nav navbar-collapse">
         <ul class="nav in" id="side-menu">
             <sidebar-search></sidebar-search>
+            <!--
             <li ui-sref-active="active">
                 <a ui-sref="dashboard.home"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
             </li>
@@ -39,27 +40,42 @@
                         <a ui-sref="dashboard.grid">Grid</a>
                     </li>
                 </ul>
-                <!-- /.nav-second-level -->
-            </li>
+                <!-- /.nav-second-level 
+            </li>-->
             <li ng-class="{active: collapseVar==3}">
                 {{dropDown}}
                 <a href="" ng-click="check(3)">
-                    <i class="fa fa-wrench fa-fw"></i>Flow Chart<span class="fa arrow"></span>
+                    <i class="fa fa-wrench fa-fw"></i>Business Flows<span class="fa arrow"></span>
                 </a>
                 <ul class="nav nav-second-level" collapse="collapseVar!=3">
                     <li ui-sref-active="active">
                         <a ui-sref="dashboard.CreateFlowChart">Create Flowchart</a>
                     </li>
                     <li ui-sref-active="active">
-                        <a ui-sref="dashboard.buttons">Modify Flow </a>
+                        <a ui-sref="dashboard.ModifyFlowChart">Modify Flowchart </a>
                     </li>
                     <li ui-sref-active="active">
-                        <a ui-sref="dashboard.notifications">View Flowchart</a>
+                        <a ui-sref="dashboard.ViewFlowChart">View Flowchart</a>
                     </li>
                 </ul>
                 <!-- /.nav-second-level -->
             </li>
             <li ng-class="{active: collapseVar==2}">
+                {{dropDown}}
+                <a href="" ng-click="check(2)">
+                    <i class="fa fa-wrench fa-fw"></i>Usability<span class="fa arrow"></span>
+                </a>
+                <ul class="nav nav-second-level" collapse="collapseVar!=2">
+                    <li ui-sref-active="active">
+                        <a ui-sref="dashboard.CreateUsability">Create Usability Texts</a>
+                    </li>   
+                    <li ui-sref-active="active">
+                        <a ui-sref="dashboard.ViewPresentations">View Usability Presentations</a>
+                    </li>   
+                </ul>
+                <!-- /.nav-second-level -->
+            </li>
+            <!--<li ng-class="{active: collapseVar==2}">
                 <a href="" ng-click="check(2)"><i class="fa fa-sitemap fa-fw"></i> Multi-Level Dropdown<span
                         class="fa arrow"></span></a>
                 <ul class="nav nav-second-level" collapse="collapseVar!=2">
@@ -87,11 +103,11 @@
 
                         </ul>
                         <!-- /.nav-third-level -->
-                    </li>
+                   <!--  </li>
                 </ul>
-                <!-- /.nav-second-level -->
+                 /.nav-second-level 
             </li>
-            <li ng-class="{active:collapseVar==4}">
+          <!--   <li ng-class="{active:collapseVar==4}">
                 <a href="" ng-click="check(4)"><i class="fa fa-files-o fa-fw"></i> Sample Pages<span
                         class="fa arrow"></span></a>
                 <ul class="nav nav-second-level" collapse="collapseVar!=4">
@@ -102,9 +118,9 @@
                         <a ui-sref="login">Login Page</a>
                     </li>
                 </ul>
-                <!-- /.nav-second-level -->
-            </li>
-            <li><a href="http://www.strapui.com/">Premium Angular Themes</a></li>
+                <!-- /.nav-second-level 
+            </li>-->
+          
         </ul>
     </div>
     <!-- /.sidebar-collapse -->

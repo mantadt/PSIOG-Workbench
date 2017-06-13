@@ -580,8 +580,34 @@
             });
         }
 
+        $scope.UpdateFlowChart= function()
+            {
+            var flowID= $scope.itemSelected.flowChartID
+            var data = JSON.parse($scope.model.toJson());
+            var flowchartID="flowChartID"
+            data[flowchartID]=flowID;
+             var flowchartName="flowchartName"
+            data[flowchartName]=$scope.itemSelected.flowchartName;
+
+            $http({
+                method: 'POST',
+                url: 'http://192.168.10.132:1337/updateFlowchartByID',
+                data: data,
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                }
+            }).then(function successCallback(response) {
+                $scope.employees = response.data;
+                alert(JSON.stringify($scope.employees));
+            }, function errorCallback(response) {
+                console.log(response.statusText);
+            });
+
+        
+}
+
+
         $scope.UploadFile = function () {
-            alert('upload calls');
 
              insertFile(document.getElementById("fileUpload").files[0], function (response) {
                             notifySuccess();
@@ -627,7 +653,6 @@
            
         }
          $scope.SelectFile= function () {
-            alert('SelectFile calls');
                  // printFile($('#ddlJsonList').val(),$scope);
                     }
 
@@ -639,7 +664,6 @@
             if($scope.itemSelected)
                 {
             var floID=$scope.itemSelected.flowChartID;
-        alert(floID);
 
          $http({
                 method: 'GET',
@@ -940,7 +964,7 @@ var CLIENT_ID = '523816527790-iudprk57d1nu0lpo28gndlt35gt3kocm.apps.googleuserco
                                     xhr.send();
 
                                     //checkXHRAvailable();
-                                    await sleep(10000);
+                                    await sleep(5000);
                                     jLoop++;
                                 }
                                 else if (values.visited)

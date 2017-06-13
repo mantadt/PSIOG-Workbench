@@ -142,6 +142,10 @@ angular
                 templateUrl: 'views/ui-elements/ViewFlowChart.html',
                 url: '/ViewFlowChart'
             })
+              .state('dashboard.ModifyFlowChart', {
+                templateUrl: 'views/ui-elements/ModifyFlowChart.html',
+                url: '/ModifyFlowChart'
+            })
             .state('dashboard.CreateUsability', {
                 templateUrl: 'views/ui-elements/CreateUsability.html',
                 url: '/CreateUsability'

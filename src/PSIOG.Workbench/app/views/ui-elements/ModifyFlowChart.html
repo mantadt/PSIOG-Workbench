@@ -1,0 +1,198 @@
+﻿<style type="text/css">
+    /* The Modal (background) */
+    .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1005; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    }
+
+    /* Modal Content/Box */
+
+
+    .modal-content {
+        background-color: #fefefe;
+        /*margin: 4% auto;*/
+        margin-right: 0%;
+        padding: 11px;
+        border: 1px solid #888;
+        width: 20%;
+        overflow-x: scroll;
+        height: auto%;
+        /*float: right;*/
+        position: absolute;
+        bottom: 0px;
+        margin-left: 2px;
+    }
+
+    /*.modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            margin-right: 2%;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%;
+            height: auto;
+            float: right;
+        }*/
+
+
+    .smallUpload {
+        float: right;
+        font-weight: bold;
+        margin: 3%;
+    }
+
+        .smallUpload:hover,
+        .smallUpload:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+
+    /* The Close Button */
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+    .slick-slide {
+        margin: 0px 1px;
+    }
+
+        .slick-slide img {
+            width: 100%;
+        }
+
+    .slick-prev:before,
+    .slick-next:before {
+        color: black;
+    }
+</style>
+
+
+<div>
+
+   
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Flowchart</h1>
+                
+
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+Modify Flowchart
+                </div><div class="panel-body" ng-controller="MinimalCtrl">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <form role="form">
+                                <div class="form-group" >
+                                    <label>Choose File</label>
+                                    <div class="form-group"  >
+                                        <flowchartddl></flowchartddl>
+                                    </div>
+                                    <!--<label>FileName</label>
+                                    <input class="form-control" id="txtFileName" placeholder="Enter text">-->
+                                </div>
+
+
+                            </form>
+                        </div>
+                        <div class="col-lg-12" >
+                            <form role="form">
+                                <div class="form-group">
+                                    <div >
+                                        <div id="sample">
+                                            
+                                            <div style="width: 100%; white-space: nowrap;">
+                                                <span style="display: inline-block; vertical-align: top; width: 100px">
+                                                    <go-Palatte go-model="model" style="border: solid 1px black; height: 500px"></go-Palatte>
+                                                </span>
+                                                <span style="display: inline-block; vertical-align: top; width: 80%">
+                                                    <go-diagram go-model="model" style="border: solid 1px black; height: 500px"></go-diagram>
+                                                </span>
+                                            </div>
+                                            <div>
+                                                <br />
+                                                <button type="button" ng-click="UpdateFlowChart()"  class="btn btn-primary">Update</button>
+                                            </div>
+                                            <div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="myModal" class="modal modalpopup">
+
+                                        <!-- Modal content -->
+                                        <div class="modal-content">
+                                            <div class="smallUploadBox" style="display: none">
+                                                <input type="file" id="fileUpload" />
+                                                <br />
+                                                <!--ng-click="UploadFile()"-->
+                                                <button class="btn-primary " ng-click="UploadFile()"  >Upload</button>
+                                                <button class="btn-primary " onclick="CanceluploadFile()">Cancel</button>
+                                               
+
+
+                                            </div>
+                                            <span onclick="closepopup();" class="close">&times;</span>
+                                            <i class="glyphicon glyphicon-cloud-upload smallUpload" onclick="openUpload('upload');" aria-hidden="true"></i>
+                                            <div class="widget-body">
+                                                <span id="spnKey" style="display: none"></span>
+                                                <a href="#"><span class="large label tag label-primary"><span id="spnText"></span></span></a>
+                                            </div>
+                                                <div id="viewError">
+                                                    <h6>No views to show.</h6>
+                                                </div>
+                                                <div id="imageLoader" style="align-content: center; display: none">
+
+                                                    <img src="img/ellipsis.gif" style="" />
+                                                </div>
+                                                <div id="viewList">
+                                                </div>
+                                            </div>
+                                            <div id="divAssets" style="display: none">
+                                                <table id="tableAssets" style="border: 1px solid; display: none" border="1"></table>
+                                                <br />
+                                            </div>
+                                            <pre id="content" style="display: none"></pre>
+                                         
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+                    <!-- /.row (nested) -->
+                </div>
+
+
+            </div>
+        </div>
+
+    </div>
+   
+</div>
+

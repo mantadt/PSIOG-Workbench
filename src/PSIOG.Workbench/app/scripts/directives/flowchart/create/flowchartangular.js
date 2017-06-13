@@ -4,7 +4,7 @@
             restrict: 'E',
             template: '<div></div>',  // just an empty DIV element
             replace: true,
-            scope: { model: '=goModel', op: '@' },
+            scope: { model: '=goModel', op: '@', blkid : '=blockId' },
             link: function (scope, element, attrs) {
 
                 var $ = go.GraphObject.make;  // for conciseness in defining templates
@@ -49,6 +49,8 @@
                     var blockId = val.key;
                     var flowchartId = scope.$parent.itemSelected.flowChartID;
                     var imagesC = [];
+                   
+                    scope.blkid = val.key;
 
                     $http({
                         method: 'GET',
@@ -702,6 +704,34 @@
                 { "from": -3, "to": -6, "fromPort": "B", "toPort": "T", "visible": true, "points": [-317, -240.90000000000003, -317, -230.90000000000003, -317, -212.87441860465117, -315, -212.87441860465117, -315, -194.84883720930233, -315, -184.84883720930233] }
             ]
         );
+
+        $scope.saveUsability = function(){
+            flowchartID = $scope.itemSelected.flowChartID;
+            blockID = $scope.blkid; 
+            var item = { "flowchartID": flowchartID, "blockID": blockID,  "coordinates": coordinates};
+            var data  = angular.toJson(item, true)
+            console.log(data);
+            
+            var url = 'http://192.168.10.132:1337/addCoordinates';
+           // console.log(item);
+            $.ajax({
+                crossDomain:"true",
+                type:"POST",
+                url: url,
+                data :  data,
+                cache: false,
+                timeout: 50000,
+                contentType :"application/json",
+                success: function(response){ 
+                    console.log(response);
+                   
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    
+                    console.log('error ' + textStatus + " " + errorThrown);
+                }
+            });
+        }
 
         $scope.model.selectedNodeData = null;
         $scope.saveFlowChart = function () {

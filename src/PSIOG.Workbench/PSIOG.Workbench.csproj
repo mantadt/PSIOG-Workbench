@@ -74,8 +74,10 @@
     <Content Include="app\scripts\require.js" />
     <Content Include="app\styles\darkbox.css" />
     <Content Include="app\styles\pnotify.custom.min.css" />
+    <Content Include="app\views\ui-elements\CreateUsability.html" />
     <Content Include="app\views\ui-elements\ModifyFlowChart.html" />
     <Content Include="app\views\ui-elements\ViewFlowChart.html" />
+    <Content Include="app\views\ui-elements\ViewPresentations.html" />
     <Content Include="bower_components\angular-file-upload\.gitignore" />
     <Content Include="bower_components\angular-file-upload\dist\angular-file-upload.js" />
     <Content Include="bower_components\angular-file-upload\dist\angular-file-upload.min.js" />
@@ -466,7 +468,6 @@
     <Content Include="app\views\pages\login.html" />
     <Content Include="app\views\table.html" />
     <Content Include="app\views\ui-elements\buttons.html" />
-    <Content Include="app\views\ui-elements\CreateFlowChart - Copy.html" />
     <Content Include="app\views\ui-elements\CreateFlowChart.html" />
     <Content Include="app\views\ui-elements\grid.html" />
     <Content Include="app\views\ui-elements\icons.html" />

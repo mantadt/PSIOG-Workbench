@@ -19,16 +19,6 @@
                                     <div class="section__text mdl-cell mdl-cell--10-col-desktop mdl-cell--6-col-tablet mdl-cell--3-col-phone">
                                         <textarea ng-model="xmlpaste" rows="6" cols="100"></textarea>
                                         <br />
-                                        <!--<div>
-                        <h5>Pick a file from Google Drive</h5>
-
-                        <button id="authorize-button" style="display: none;">Authorize</button>
-                        <button id="signout-button" style="display: none;">Sign Out</button>
-
-                        <pre id="content"></pre>
-
-
-                    </div>-->
                                     </div>
                                     <div>
                                         <button id="generatebuttonJSON" class="mdl-button" style="color:black" ng-click="clickedGenerateJSON(false)">Click to Generate Test Cases</button>
@@ -42,7 +32,8 @@
                                 <h4 class="mdl-cell mdl-cell--12-col">Pick the JSON file!</h4>
 
                                 <div class="section__text mdl-cell mdl-cell--10-col-desktop mdl-cell--6-col-tablet mdl-cell--3-col-phone">
-                                    <select id="jsonpicker" ng-model="jsonpicker" ng-options="file for file in jsonfiles"> {{file}}</select>
+                                    <!--<select id="jsonpicker" ng-model="jsonpicker" ng-options="file for file in jsonfiles"> {{file}}</select>-->
+                                    <flowchartddl></flowchartddl>
 
                                     <br />
                                     <br /><br />
@@ -58,7 +49,7 @@
                 </div>-->
                                 </div>
                                 <div>
-                                    <button id="generatebutton" class="mdl-button" style="color:black" ng-click="clickedGenerate(false)">Click to Generate Test Cases</button>
+                                    <button id="generatebutton" class="mdl-button" style="color:black" ng-click="clickedGenerateJSON(false)">Click to Generate Test Cases</button>
                                 </div>
 
 
@@ -89,7 +80,14 @@
 
                     <div class="mdl-card mdl-cell mdl-cell--12-col" ng-show="results" >
                         <div class="mdl-card__supporting-text mdl-grid mdl-grid--no-spacing">
-                            <h3 class="mdl-cell mdl-cell--12-col">Results</h3>
+                            <div>
+                                
+                                    <h3 >Results</h3>
+                                
+                                <div ng-click="goBack()" style="float:right">
+                                    Close
+                                </div>
+                            </div>
 
                             <div class="section__text mdl-cell mdl-cell--10-col-desktop mdl-cell--6-col-tablet mdl-cell--3-col-phone">
 

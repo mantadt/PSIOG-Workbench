@@ -36,9 +36,9 @@ angular
                                     'scripts/directives/header/header.js',
                                     'scripts/directives/header/header-notification/header-notification.js',
                                     'scripts/directives/sidebar/sidebar.js',
-                                    'scripts/directives/sidebar/sidebar-search/sidebar-search.js',
-                                    'scripts/directives/genAndView/genAndView.js',
-                                    'scripts/directives/flowchartdd.js'
+                                    'scripts/directives/sidebar/sidebar-search/sidebar-search.js',                                    
+                                    'scripts/directives/flowchartdd.js',
+                                    'scripts/directives/generator/generator.js'
                                 ]
                             }),
                             $ocLazyLoad.load(
@@ -89,7 +89,7 @@ angular
                                 'scripts/directives/timeline/timeline.js',
                                 'scripts/directives/notifications/notifications.js',
                                 'scripts/directives/chat/chat.js',
-                                 'scripts/directives/genAndView/genAndView.js',
+                                'scripts/directives/generator/generator.js',
                                 'scripts/directives/dashboard/stats/stats.js'
                             ]
                         })
@@ -176,6 +176,38 @@ angular
                 templateUrl: 'views/ui-elements/grid.html',
                 url: '/grid'
             })
+            .state('dashboard.generateTests', {
+                templateUrl: 'views/pages/generateTests.html',
+                url: '/generateTests'
+            })
     }]);
+
+//Service to Generate all combinations of flows
+angular
+    .module('sbAdminApp').factory('generatorService', ['$http', function ($http) {
+    var data = { name: 'MS' };
+    var urlBase = 'http://192.168.10.132:1337/';
+    return {
+        generateFromXml: function (xmlData) {
+            var formData = new FormData();
+            //formData.append("xmlData", "DSDS");
+            //console.log(xmlData, formData.getAll('xmlData'));
+            return $http.post(urlBase + "generateFromXml/", $.param({ 'xmlData': xmlData }), { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
+        },
+
+        generateFromJson: function (jsonData) {
+            //var formData = new FormData();
+            //formData.append("flowChartID", id);
+            return $http.post(urlBase + "generateFromJson/", jsonData, { headers: { 'Content-Type': 'application/json' } });
+        },
+
+        getJsonValue: function (id) {
+            return $http.get(urlBase + "getFlowChartByID/" + id, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
+        }
+
+
+    }
+}]);
+
 
 

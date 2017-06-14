@@ -876,7 +876,7 @@
         }
         $scope.funcMergeJson = function (fileorders) {
             var jsonData = $scope.model.toJson();
-            $scope.blkid = -1;
+            
             var data = JSON.parse(jsonData);
             var orderData = JSON.parse(fileorders);
             //var Count = Object.keys(fileorders).length;

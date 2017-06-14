@@ -84,11 +84,40 @@
     .slick-next:before {
         color: black;
     }
+
+    #EditScreen {
+        z-index:0;
+        display: none;
+          position: absolute; 
+          top:500px;
+          left: 1300px; 
+          transition: 0.5s; 
+          padding: 5px; 
+          width: 300px; 
+          text-decoration: none; 
+          color: black; 
+          border-radius: 0 5px 5px 0; 
+          background: deepskyblue;
+        }
+       #EditScreen:hover {
+           left: 1100px; 
+       }
+     ol li{
+       color : white;
+     }
 </style>
 
 
 <div>
+    <div id="EditScreen">
+        <ol id="list"></ol>
+        <div>
 
+            <button class="button" id="clear" onclick="EditList()">Remove Entry</button>
+            <button class="button" id="anim" onclick="AnimateList()">Animate Entry</button>
+            <button class="button" id="downloadbtn" onclick="saveList()">Done!</button>
+        </div>
+    </div>
 
     <div class="row">
         <div class="col-lg-12">
@@ -133,13 +162,13 @@
 
                                                 </span>-->
                                                 <span style="display: inline-block; vertical-align: top; width: 80%">
-                                                    <go-diagram go-model="model" op="2" style="border: solid 1px black; height: 500px"></go-diagram>
+                                                    <go-diagram go-model="model" block-id="blkid" op="2" style="border: solid 1px black; height: 500px"></go-diagram>
 
                                                 </span>
                                             </div>
                                             <div>
                                                 <br />
-                                                <button type="button" ng-click="saveFlowChart()" class="btn btn-primary">Save</button>
+                                                <button type="button" ng-click="saveUsability()" class="btn btn-primary">Save</button>
 
                                             </div>
 
@@ -200,4 +229,4 @@
     </div>
 
 </div>
-
+<script src="../../scripts/AddTooltips.js"></script>

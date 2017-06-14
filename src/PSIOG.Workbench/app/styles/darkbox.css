@@ -11,7 +11,7 @@ Darkbox
   color:#fff;
   font: 14px/1.4 sans-serif;
   position: fixed;
-  z-index: 999999;
+  z-index: 9999; /*999999*/
   top: 24px; /* since we cannot use padding */
   left: 24px;
   bottom: 24px;

@@ -4,7 +4,7 @@
             restrict: 'E',
             template: '<div></div>',  // just an empty DIV element
             replace: true,
-            scope: { model: '=goModel', op: '@' },
+            scope: { model: '=goModel', op: '@', blkid : '=blockId' },
             link: function (scope, element, attrs) {
 
                 var $ = go.GraphObject.make;  // for conciseness in defining templates
@@ -49,6 +49,8 @@
                     var blockId = val.key;
                     var flowchartId = scope.$parent.itemSelected.flowChartID;
                     var imagesC = [];
+                   
+                    scope.blkid = val.key;
 
                     $http({
                         method: 'GET',
@@ -65,75 +67,69 @@
                     });
                 }
 
-                var isXHRrunning = false;
-                async function loadImagesDir(returnResult) {
+                var divString = "";
+                function loadImagesDir(returnResult) {
                     var bool = false;
-                    var divString = "";
-
-                    if (returnResult.assets.length > 0) {
+                    divString = "";
+                    if (returnResult.assets && returnResult.assets.length > 0) {
+                        PNotify.removeAll();
                         var accessToken = gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().access_token;
 
                         for (var iLoop = 0; iLoop < returnResult.assets.length; iLoop++) {
                             var values = returnResult.assets[iLoop];
 
                             if (values.assetType.indexOf("image") >= 0 && (values.visited == null || typeof values.visited == "undefined" || !values.visited)) {
-                                //$("#imageLoader").show();
-
-                                var jLoop = 0, vClass = "";
+                                var vClass = "";
 
                                 bool = true;
                                 values.visited = true;
-                                isXHRrunning = true;
                                 var fileId = values.assetURL;
-                                var xhr = new XMLHttpRequest();
-                                xhr.open("GET", "https://www.googleapis.com/drive/v3/files/" + fileId + '?alt=media', true);
-                                xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
-                                xhr.responseType = 'arraybuffer';
-                                xhr.onload = function () {
-                                    var base64 = 'data:image/png;base64,' + base64ArrayBufferDir(xhr.response);
-                                    if (iLoop == 0)
-                                        vClass = "class='imgFirstClick'";
-                                    //"' data-darkbox='" + base64 + "'data-darkbox-group='one'/></div>
-                                    divString += " <div><img height='50' " + vClass + " width='50' src='" + base64 + "' data-darkbox='" + base64 + "'data-darkbox-group='one'></div>";
-                                    //var divOuter = document.createElement("div");
 
-                                    //divString += "<b>" + values.assetName + "</b>";
-
-                                    // divString += "<br/><br/>";
-
-                                    //src = "http://placehold.it/50x50/f0f"
-                                    //data - darkbox="http://placehold.it/800x600/f0f"
-                                    //data - darkbox - group="one"
-
-                                    //  divOuter.innerHTML = divString;
-                                    isXHRrunning = false;
-                                }
-
-
-
-                                xhr.send();
-
-                                //checkXHRAvailable();
-                                await sleep(1000);
-                                jLoop++;
+                                requestXHR("https://www.googleapis.com/drive/v3/files/" + fileId + '?alt=media', accessToken, iLoop);
                             }
                             else if (values.visited)
                                 bool = true;
                         }
-
-                        jQuery('.divUnclear').remove();
-                        var el = angular.element("<div class='divUnclear' style='display:none'></div>");
-                        el.append(divString);
-                        $compile(el)(scope);
-                        element.append(el);
-                        jQuery("img.imgFirstClick").click();
                     }
+                    else
+                        notifyUSFailure();
                 }
 
-                async function checkXHRAvailable() {
-                    if (isXHRrunning) {
-                        await sleep(2000);
-                        checkXHRAvailable();
+                var xmlHttpReqQueue = new Array();
+                function requestXHR(url, accessToken, iLoop) {
+                    var xmlHttpReq;
+                    var str=url;
+                    var n = str.lastIndexOf("/");
+                    var m = str.indexOf("?");
+                    var fileId= str.substring(n+1,m);
+                    xmlHttpReq = new XMLHttpRequest()
+                    xmlHttpReq.onload = function () {
+                        xmlHttpReqQueue.shift();
+
+                        var base64 = 'data:image/png;base64,' + base64ArrayBufferDir(xmlHttpReq.response);
+                        if (iLoop == 0)
+                            vClass = "class='imgFirstClick'";
+                        
+                        divString += " <div><img height='50' " + vClass + " width='50' src='" + base64 + "' data-darkbox='" + base64 + "' data-darkbox-group='one'"+" data-darkbox-description='" +fileId +"'></div>";
+                        if (xmlHttpReqQueue.length > 0)
+                            xmlHttpReqQueue[0].send(null);
+                        else {
+                            jQuery('.divUnclear').remove();
+                            var el = angular.element("<div class='divUnclear' style='display:none'></div>");
+                            el.append(divString);
+                            $compile(el)(scope);
+                            element.append(el);
+                            jQuery("img.imgFirstClick").click();
+                        }
+                    }
+
+                    xmlHttpReq.open('GET', url, true);
+                    xmlHttpReq.setRequestHeader('Authorization', 'Bearer ' + accessToken);
+                    xmlHttpReq.responseType = 'arraybuffer';
+                    xmlHttpReqQueue.push(xmlHttpReq);
+
+                    if (xmlHttpReqQueue.length == 1) {
+                        xmlHttpReq.send(null);
                     }
                 }
 
@@ -713,6 +709,36 @@
             ]
         );
 
+        $scope.saveUsability = function(){
+            flowchartID = $scope.itemSelected.flowChartID;
+            blockID = $scope.blkid; 
+            var item = { "flowchartID": flowchartID, "blockID": blockID,  "coordinates": coordinates};
+            var data  = angular.toJson(item, true)
+            
+            
+            var url = 'http://192.168.10.132:1337/addCoordinates';
+           // console.log(item);
+            $.ajax({
+                crossDomain:"true",
+                type:"POST",
+                url: url,
+                data :  data,
+                cache: false,
+                timeout: 50000,
+                contentType :"application/json",
+                success: function(response){ 
+                    console.log(response);
+                   
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    
+                   console.log('error ' + textStatus + " " + errorThrown);
+                }
+            });
+            document.getElementById("EditScreen").style.zIndex = 0;
+            document.getElementById("EditScreen").style.display ="none";
+        }
+
         $scope.model.selectedNodeData = null;
         $scope.saveFlowChart = function () {
 
@@ -896,12 +922,25 @@ function closepopup() {
     modal.style.display = "none";
 }
 function notifySuccess() {
+    PNotify.removeAll();
     new PNotify({
         title: 'Success!',
         text: 'That thing that you were trying to do worked.',
-        type: 'success'
+        type: 'success',
+        delay: 2500,
     });
 }
+
+function notifyUSFailure() {
+    PNotify.removeAll();
+    new PNotify({
+        title: 'No Images found!',
+        text: 'No usability images found for this block.',
+        type: 'info',
+        delay: 2500
+    });
+}
+
 
 function openUpload() {
     $(".smallUploadBox").show('fast');

@@ -127,7 +127,7 @@
                         $compile(el)(scope);
                         element.append(el);
                         jQuery("img.imgFirstClick").click();
-                    }                    
+                    }
                 }
 
                 async function checkXHRAvailable() {
@@ -223,6 +223,7 @@
 
                     setReturnResult(obj);
                     loadImages();
+                    // loadImagesAsList();
                 }
 
 
@@ -686,6 +687,15 @@
         };
     })
 
+    //for sorting
+    .directive("sortable", function () {
+        return {
+            restrict: "C",
+            link: function (scope, element, attrs) {
+                element.sortable();
+            }
+        }
+    })
     .controller('MinimalCtrl', function ($scope, $rootScope, $http) {
         $scope.model = new go.GraphLinksModel(
             [
@@ -756,47 +766,45 @@
 
 
         $scope.UploadFile = function () {
-
+            
             insertFile(document.getElementById("fileUpload").files[0], function (response) {
-                notifySuccess();
                 var fileUnID = GUID();
                 GUID.register(fileUnID);
 
                 returnResult.assets.push({ fileID: fileUnID, assetType: response.mimeType, assetName: response.name, assetURL: response.id });
                 document.getElementById("fileUpload").value = "";
 
-                if (document.getElementById("tableAssets").getElementsByTagName("tr").length == 0) {
-                    //<td>UrlFragment</td>
-                    var header = "<tr style='font-weight:bold;'><td>Type</td><td>Name</td></tr>";
-                    document.getElementById("tableAssets").innerHTML = header;
-                }
-
-                document.getElementById("divAssets").style.display = "";
-                var row = document.getElementById("tableAssets").insertRow(1);
-                (row.insertCell(0)).innerHTML = response.mimeType;
-                (row.insertCell(1)).innerHTML = "<a src='" + response.id + "'>" + response.name + "</a>";
-                (row.insertCell(2)).innerHTML = response.id;
 
                 var Key = document.getElementById('spnKey');
                 var jsondata = $scope.model.toJson();
                 var data = JSON.parse(jsondata);  //parse the JSON
                 var resStr;
 
+                var OrderCount = 0;
                 $.each(data.nodeDataArray, function (i, el) {
                     var newdata;
                     if (this.key === parseInt(Key.innerHTML)) {
-                        if (!this.assets)
+                        if (!this.assets) {
                             this.assets = [];
-                        this.assets.push({ fileID: fileUnID, assetType: response.mimeType, assetName: response.name, assetURL: response.id });
+                            OrderCount = 0;
+                        }
+                        else
+                            OrderCount = this.assets.length;
+                        this.assets.push({ fileID: fileUnID, assetType: response.mimeType, assetName: response.name, assetURL: response.id, Order: OrderCount });
                         resStr = JSON.stringify(data);
+
                     }
                 });
                 $scope.model = go.Model.fromJson(data);
                 $scope.model.setDataProperty('lastModified', (new Date()).toString());
                 // document.getElementById("mySavedModel").value = myDiagram.model.toJson();
                 console.log(JSON.stringify(data));
+                notifySuccess();
+
+
 
                 loadImages();
+                //loadImagesAsList();
             });
 
         }
@@ -827,6 +835,45 @@
                 });
             }
 
+        }
+        $scope.updateJSONData = function () {
+            
+            var indexOrder = [];
+            $('#ListView div ').each(function (i) {
+                var eachdivindex = $(this).index();
+                var filename = $(this).attr('id');
+                indexOrder.push({ assetURL: filename, Order: eachdivindex });
+            });
+            var jsonValforOrder = JSON.stringify(indexOrder);
+            $scope.funcMergeJson(jsonValforOrder);
+            //console.log(json);
+        }
+        $scope.funcMergeJson = function (fileorders) {
+            var jsonData = $scope.model.toJson();
+            $scope.blkid = -1;
+            var data = JSON.parse(jsonData);
+            var orderData = JSON.parse(fileorders);
+            //var Count = Object.keys(fileorders).length;
+            for (var iL = 0; iL < data.nodeDataArray.length; iL++) {
+                var item = data.nodeDataArray[iL];
+                if (item.key == $scope.blkid) {
+                    if (item.assets) {
+                        for (var jL = 0; jL < item.assets.length; jL++) {
+                            for (var kL = 0; kL < orderData.length; kL++) {
+                                if (item.assets[jL].assetURL == orderData[kL].assetURL) {
+                                    item.assets[jL].Order = orderData[kL].Order;
+                                    break;
+                                }
+                            }
+                        }
+                        returnResult.assets = item.assets;
+                        break;
+                    }
+                }
+            }
+            var FinalData = JSON.stringify(data);
+            $scope.model = go.Model.fromJson(FinalData);
+            console.log($scope.model);
         }
     });
 
@@ -896,6 +943,7 @@ function openTab(evt, tabName) {
     evt.currentTarget.className += " active";
 
     loadImages();
+    // loadImagesAsList();
 }
 
 function setReturnResult(value) {
@@ -1064,10 +1112,10 @@ function insertFile(fileData, callback) {
 var isXHRrunning = false;
 async function loadImages() {
     var bool = false;
-
+    
     if (returnResult.assets.length > 0) {
         var accessToken = gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().access_token;
-        var divString = "<section class='regular slider sortable'>";
+        var divString = "<section class='regular slider '>";
 
         var viewList = document.getElementById("viewList");
         for (var iLoop = 0; iLoop < returnResult.assets.length; iLoop++) {
@@ -1090,7 +1138,7 @@ async function loadImages() {
                     var base64 = 'data:image/png;base64,' + base64ArrayBuffer(xhr.response);
 
                     //"' data-darkbox='" + base64 + "'data-darkbox-group='one'/></div>
-                    divString += " <div><img  height='50' width='50' src='" + base64 + "' data-darkbox='" + base64 + "'data-darkbox-group='one'></div>";
+                    divString += " <div><img id='" + values.assetURL + "' height='50' width='50' src='" + base64 + "' data-darkbox='" + base64 + "'data-darkbox-group='one'></div>";
                     //var divOuter = document.createElement("div");
 
                     //divString += "<b>" + values.assetName + "</b>";
@@ -1109,7 +1157,7 @@ async function loadImages() {
 
                 xhr.send();
 
-                //checkXHRAvailable();
+                checkXHRAvailable();
                 await sleep(5000);
                 jLoop++;
             }
@@ -1126,13 +1174,11 @@ async function loadImages() {
             slidesToScroll: 2
         });
 
-
     }
 
     if (!bool)
         swapDivs(0);
 }
-
 async function checkXHRAvailable() {
     if (isXHRrunning) {
         await sleep(2000);
@@ -1266,5 +1312,81 @@ function printFile(fileId, $scope) {
         $scope.model.diagram = go.Model.fromJson(jsondata);
     }
     xhr.send();
+}
+// To load the list of files
+var divStringIL;
+function loadImagesAsList() {
+    $('#uploadFile').hide();
+    $('#details').show();
+    var bool = false;
+    divStringIL = "";
+
+    returnResult.assets.sort(function (a, b) {       
+            return a.Order - b.Order;    
+    });
+
+    if (returnResult.assets && returnResult.assets.length > 0) {
+        PNotify.removeAll();
+        var accessToken = gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().access_token;
+
+        for (var iLoop = 0; iLoop < returnResult.assets.length; iLoop++) {
+            var values = returnResult.assets[iLoop];
+
+            if (values.assetType.indexOf("image") >= 0) {
+                var vClass = "";
+
+                bool = true;
+                values.visited = true;
+                var fileId = values.fileID;
+
+                divStringIL += " <div id='" + values.assetURL + "'style='border: 1px solid;margin: 5px;width: 48%;background-color: lavender;font-weight: bold;text-align: center;'>" + values.assetName + "</div>";
+                //requestXHRLI("https://www.googleapis.com/drive/v3/files/" + fileId + '?alt=media', accessToken, values.assetURL);
+            }
+
+        }
+
+        var viewList = document.getElementById("ListView");
+        divStringIL += "</div>";
+        viewList.innerHTML = divStringIL;
+    }
+    else
+        notifyUSFailure();
+}
+
+var xmlHttpReqQueueIL = new Array();
+function requestXHRLI(url, accessToken, assetURL) {
+    var xmlHttpReq;
+
+    xmlHttpReq = new XMLHttpRequest()
+    xmlHttpReq.onload = function () {
+        xmlHttpReqQueueIL.shift();
+
+        var base64 = 'data:image/png;base64,' + base64ArrayBuffer(xmlHttpReq.response);
+
+        divStringIL += " <div><img id='" + assetURL + "' height='50' width='50' src='" + base64 + "'></div><br/>";
+
+        if (xmlHttpReqQueueIL.length > 0)
+            xmlHttpReqQueueIL[0].send(null);
+        else {
+            var viewList = document.getElementById("ListView");
+            divStringIL += "</div>";
+            viewList.innerHTML = divStringIL;
+        }
+    }
+
+    xmlHttpReq.open('GET', url, true);
+    xmlHttpReq.setRequestHeader('Authorization', 'Bearer ' + accessToken);
+    xmlHttpReq.responseType = 'arraybuffer';
+    xmlHttpReqQueueIL.push(xmlHttpReq);
+
+    if (xmlHttpReqQueueIL.length == 1) {
+        xmlHttpReq.send(null);
+    }
+}
+
+
+function ShowDivs() {
+    $('#uploadFile').show();
+    $('#details').hide();
 }
 

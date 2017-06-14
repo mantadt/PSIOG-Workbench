@@ -98,7 +98,10 @@
                 var xmlHttpReqQueue = new Array();
                 function requestXHR(url, accessToken, iLoop) {
                     var xmlHttpReq;
-
+                    var str=url;
+                    var n = str.lastIndexOf("/");
+                    var m = str.indexOf("?");
+                    var fileId= str.substring(n+1,m);
                     xmlHttpReq = new XMLHttpRequest()
                     xmlHttpReq.onload = function () {
                         xmlHttpReqQueue.shift();
@@ -106,9 +109,8 @@
                         var base64 = 'data:image/png;base64,' + base64ArrayBufferDir(xmlHttpReq.response);
                         if (iLoop == 0)
                             vClass = "class='imgFirstClick'";
-
-                        divString += " <div><img height='50' " + vClass + " width='50' src='" + base64 + "' data-darkbox='" + base64 + "' data-darkbox-group='one'></div>";
-
+                        
+                        divString += " <div><img height='50' " + vClass + " width='50' src='" + base64 + "' data-darkbox='" + base64 + "' data-darkbox-group='one'"+" data-darkbox-description='" +fileId +"'></div>";
                         if (xmlHttpReqQueue.length > 0)
                             xmlHttpReqQueue[0].send(null);
                         else {
@@ -702,7 +704,7 @@
             blockID = $scope.blkid; 
             var item = { "flowchartID": flowchartID, "blockID": blockID,  "coordinates": coordinates};
             var data  = angular.toJson(item, true)
-            console.log(data);
+            
             
             var url = 'http://192.168.10.132:1337/addCoordinates';
            // console.log(item);
@@ -720,9 +722,11 @@
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     
-                    console.log('error ' + textStatus + " " + errorThrown);
+                   console.log('error ' + textStatus + " " + errorThrown);
                 }
             });
+            document.getElementById("EditScreen").style.zIndex = 0;
+            document.getElementById("EditScreen").style.display ="none";
         }
 
         $scope.model.selectedNodeData = null;

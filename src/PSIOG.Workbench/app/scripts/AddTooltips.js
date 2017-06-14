@@ -12,7 +12,8 @@ var imgs = [];
 var imageID;
 $(document).ready(function () {
     
-      ImgListen.addEventListener('mousedown', handler);
+    ImgListen.addEventListener('mousedown', handler);
+    
 });
  
 if (ImgListen.classList.contains('show'))
@@ -99,7 +100,8 @@ function getMousePos(evt) {
 var handler = function (evt) {
     document.getElementById("EditScreen").style.zIndex = 999999;
     document.getElementById("EditScreen").style.display ="block";
-    imageID = ImgListen.style.backgroundImage;
+    imageID = ImgListen.getAttribute("data-title");
+    //alert(imageID);
     //get message from input for each coordinates
      var mousePos = getMousePos(evt);
      var message = prompt("Enter tooltip text:"); 

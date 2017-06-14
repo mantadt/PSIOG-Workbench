@@ -18,8 +18,8 @@
         }),
 
         $darkbox = $("<div/>", {
-          id: "darkbox",
-          append: $prevNext,
+            id: "darkbox",
+            append: $prevNext,
           appendTo : "body"
         }),
 
@@ -57,17 +57,17 @@
           $cur = $imagesGroup.eq(c),
           description = $cur.data("darkbox-description"),
           src = $cur.data("darkbox");
-
+         $darkbox.attr("data-title", description);
       $darkbox.addClass("show spinner");
-      $darkboxDescription.html(description);
+     // $darkboxDescription.html(description);
       $darkboxStats.html(n < 2 ? "" : (c+1) +"/"+ n);
 
-      $("<img/>").on("load", function() {
-        var bigger = (this.width > docW || this.height > docH);
-        $darkbox.removeClass("spinner").css({
-          backgroundImage: "url('" + this.src + "')",
-          backgroundSize: bigger ? "contain" : "auto"
-        });
+        $("<img/>").on("load", function () {
+          var bigger = (this.width > docW || this.height > docH);
+          $darkbox.removeClass("spinner").css({
+              backgroundImage: "url('" + this.src + "')",
+              backgroundSize: bigger ? "contain" : "auto"
+          });
       }).attr("src", src);
 
     }

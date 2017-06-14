@@ -32,6 +32,7 @@
   <ItemGroup>
     <Compile Include="app.js" />
     <Compile Include="public\javascripts\data.js" />
+    <Compile Include="public\javascripts\GeneratorLogic.js" />
     <Compile Include="public\javascripts\ManageCoordinates.js">
       <SubType>Code</SubType>
     </Compile>

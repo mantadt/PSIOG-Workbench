@@ -71,6 +71,7 @@
     <Content Include="app\scripts\directives\genAndView\genAndView.js" />
     <Content Include="app\scripts\directives\generator\generator.html" />
     <Content Include="app\scripts\directives\generator\generator.js" />
+    <Content Include="app\scripts\slideshowplugin.js" />
     <Content Include="app\views\pages\generateTests.html" />
     <Content Include="app\img\ellipsis.gif" />
     <Content Include="app\img\logo.png" />

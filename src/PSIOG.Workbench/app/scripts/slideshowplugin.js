@@ -18,8 +18,8 @@
             }
         });
 
-        $q.all([one, two]).then(function success(ret) {
-            var json = ret[0].data.Flowchart.nodeDataArray;
+        return $q.all([one, two]).then(function success(ret) {
+            var json = ret[0].data.Flowchart[0].nodeDataArray;
             var coOrds = ret[1].data.Coordinates;
             var blocks = flow.split('_');
             var result = { coOrdinates: [] };
@@ -56,15 +56,8 @@
         var result = [];
 
         for (var mL = 0; mL < json.length; mL++) {
-            if (blockId == json[mL].blockId) {
-                for (var nL = 0; nl < json[mL].coordinates; nL++) {
-                    if (json[mL].coordinates[nL].FileID == fileId) {
-                        var itemCO = json[mL].coordinates[nL];
-                        var coord = { XCP: itemCO.XCP, YCP: itemCO.YCP, xc: itemCO.xc, yc: itemCO.yc, order: itemCO.order, message: itemCO.message };
-
-                        result.push(coord);
-                    }
-                }
+            if (blockId == json[mL].blockId && fileId == json[mL].FileID) {
+                result = json[mL].coordinates;
                 break;
             }
         }

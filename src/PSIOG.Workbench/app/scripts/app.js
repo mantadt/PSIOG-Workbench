@@ -38,7 +38,8 @@ angular
                                     'scripts/directives/sidebar/sidebar.js',
                                     'scripts/directives/sidebar/sidebar-search/sidebar-search.js',                                    
                                     'scripts/directives/flowchartdd.js',
-                                    'scripts/directives/generator/generator.js'
+                                    'scripts/directives/generator/generator.js',
+                                    'scripts/slideshowplugin.js'
                                 ]
                             }),
                             $ocLazyLoad.load(

@@ -187,6 +187,16 @@
 
 
                 function OpenPopup(obj) {
+
+                   jQuery('ul.tabs li').click(function () {
+                       var tab_id = jQuery(this).attr('data-toggle');
+
+                        jQuery('ul.tabs li').removeClass('current');
+                        jQuery('.tab-content').removeClass('current');
+
+                        jQuery(this).addClass('current');
+                        jQuery(tab_id).addClass('current');
+                    })
                     document.getElementById("imageLoader").style.display = "none";
 
                     // createWindowWithHtml();

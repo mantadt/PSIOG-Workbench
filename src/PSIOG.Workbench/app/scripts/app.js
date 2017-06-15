@@ -1,3 +1,4 @@
+/// <reference path="directives/genAndView/genAndView.js" />
 'use strict';
 /**
  * @ngdoc overview
@@ -38,6 +39,7 @@ angular
                                     'scripts/directives/sidebar/sidebar.js',
                                     'scripts/directives/sidebar/sidebar-search/sidebar-search.js',                                    
                                     'scripts/directives/flowchartdd.js',
+                                    'scripts/directives/genAndView/genAndView.js',
                                     'scripts/directives/generator/generator.js'
                                 ]
                             }),
@@ -90,6 +92,7 @@ angular
                                 'scripts/directives/notifications/notifications.js',
                                 'scripts/directives/chat/chat.js',
                                 'scripts/directives/generator/generator.js',
+                                'scripts/directives/genAndView/genAndView.js',
                                 'scripts/directives/dashboard/stats/stats.js'
                             ]
                         })
@@ -154,7 +157,7 @@ angular
             })
             .state('dashboard.ViewPresentations', {
                 templateUrl: 'views/ui-elements/ViewPresentations.html',
-                url: '/CreateUsability'
+                url: '/ViewPresentation'
             })
             .state('dashboard.buttons', {
                 templateUrl: 'views/ui-elements/buttons.html',

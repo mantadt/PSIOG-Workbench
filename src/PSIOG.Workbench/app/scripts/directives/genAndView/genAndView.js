@@ -1,3 +1,4 @@
+/// <reference path="../../../views/ui-elements/ViewPresentations.html" />
 'use strict';
 
 /**
@@ -13,7 +14,7 @@
 angular.module('sbAdminApp')
     .directive('genAndView', ['generatorService', function (generatorService) {       
         return {
-            templateUrl: 'scripts/directives/genAndView/genAndView.html',
+            templateUrl: 'views/ui-elements/ViewPresentations.html',
             //template : '<p>HELLO</p>',
             restrict: 'E',            
             link: function (scope) {
@@ -23,6 +24,7 @@ angular.module('sbAdminApp')
                 scope.toggleJsonXml = function () {
                     scope.jsonxmltoggle = !scope.jsonxmltoggle;
                 }
+                $scope.showcar = false;
                 scope.jsonfiles = ["1.json", "2.json"];
                 var nodes = [];
                 var links = [];
@@ -33,8 +35,11 @@ angular.module('sbAdminApp')
                 scope.clickedGenerate = function (flag) {
 
                     if (flag)
-                    { scope.displayCombinations(outp, nodes, links); }
-                    else {
+                    {
+                        scope.displayCombinations(outp, nodes, links);
+                    }
+                    else
+                    {
                         scope.loader = true;
                         scope.pastexml = false;
                         generatorService.generateFromXml(scope.xmlpaste)
@@ -82,10 +87,12 @@ angular.module('sbAdminApp')
                 }
 
                 scope.clickedGenerateJSON = function (flag) {
-
                     if (flag)
-                    { scope.displayCombinations(outp, nodes, links); }
-                    else {
+                    {
+                        scope.displayCombinations(outp, nodes, links);
+                    }
+                    else
+                    {
                         scope.loader = true;
                         scope.pastexml = false;
                         //Pass on the JSON file name, pull in the JSON data, and send it to the generator Service
@@ -116,7 +123,6 @@ angular.module('sbAdminApp')
                                     html: " "
                                 }).appendTo('#endNode');
 
-
                                 for (var i = 0; i < nodes.length; i++) {
                                     //creates option tag
                                     jQuery('<option/>', {
@@ -138,15 +144,13 @@ angular.module('sbAdminApp')
 
                     semioutp = [];
                     //outp = resultsData;
-                    console.log(outp);
-                    
-
+                    //console.log(outp);
                     // var startNode = scope.startNode;
                     var startNodeValue = scope.startNode;
 
                     //var endNode = document.getElementById("endNode");
                     //var endNodeValue = endNode.options[endNode.selectedIndex].value;
-                    console.log(startNodeValue);
+                   // console.log(startNodeValue);
 
                     //var endNode = document.getElementById("endNode");
                     var endNodeValue = scope.endNode;
@@ -154,190 +158,164 @@ angular.module('sbAdminApp')
 
 
                     if (startNodeValue == -1 && endNodeValue == -1)
-                    { semioutp = outp;}
-      if(startNodeValue!=-1 && endNodeValue==-1) //startNode's value and endNode's value doesnt exist
-      {
-       for(var i=0; i<outp.length; i++)
-          {
-      if(outp[i].slice(0, outp[i].indexOf("_"))==startNodeValue)
-        semioutp.push(outp[i]);
+                    {
+                        semioutp = outp;
+                    }
+                    if(startNodeValue!=-1 && endNodeValue==-1) //startNode's value and endNode's value doesnt exist
+                    {
+                        for(var i=0; i<outp.length; i++)
+                        {
+                            if(outp[i].slice(0, outp[i].indexOf("_"))==startNodeValue)
+                                semioutp.push(outp[i]);
 
-      if(outp[i].indexOf("_"+startNodeValue+"_")!=-1)
+                            if(outp[i].indexOf("_"+startNodeValue+"_")!=-1)
+                               semioutp.push(outp[i].slice(outp[i].indexOf("_"+startNodeValue+"_")+1, outp[i].length));
+                            console.log(semioutp);
+                        }
+                    }
 
-       semioutp.push(outp[i].slice(outp[i].indexOf("_"+startNodeValue+"_")+1, outp[i].length));
-                  console.log(semioutp);
-                  
-       
-    }}
+                    if(endNodeValue!=-1 && startNodeValue==-1) //startNode's value doesnt and endNode's value exist
+                    {
+                       for(var i=0; i<outp.length; i++)
+                       {
+                            if(outp[i].slice(outp[i].lastIndexOf("_")+1, outp[i].length)==endNodeValue)
+                                semioutp.push(outp[i]);
 
-      if(endNodeValue!=-1 && startNodeValue==-1) //startNode's value doesnt and endNode's value exist
-      {
-       for(var i=0; i<outp.length; i++)
-          {
-     
-      if(outp[i].slice(outp[i].lastIndexOf("_")+1, outp[i].length)==endNodeValue)
-        semioutp.push(outp[i]);
+                            else if(outp[i].indexOf("_"+endNodeValue+"_")!=-1)
+                               semioutp.push(outp[i].slice(0, outp[i].indexOf("_"+endNodeValue+"_")+("_"+endNodeValue+"_").length));
+                            console.log(semioutp);
 
-      else if(outp[i].indexOf("_"+endNodeValue+"_")!=-1)
+                       }
+                    }
 
-       semioutp.push(outp[i].slice(0, outp[i].indexOf("_"+endNodeValue+"_")+("_"+endNodeValue+"_").length));
-                  console.log(semioutp);
+                    else //startNode's value and endNode's value exist
+                    {
+                       for(var i=0; i<outp.length; i++)
+                       {
+                              //Handling when case starts with given Start Node - when it ends in End Node or when it doesn't
+                              if(outp[i].slice(0, outp[i].indexOf("_"))==startNodeValue)
+                              {
+                                  if(outp[i].slice(outp[i].lastIndexOf("_")+1, outp[i].length)==endNodeValue)
+                                    semioutp.push(outp[i]);
 
-          }
-      }
+                                  else if(outp[i].indexOf("_"+endNodeValue+"_")!=-1)
+                                   semioutp.push(outp[i].slice(0, outp[i].indexOf("_"+endNodeValue+"_")+("_"+endNodeValue+"_").length));
+                                  console.log(semioutp);
+                               }
+                                  //Handling when startNode isnt at start
+                               else if(outp[i].indexOf("_"+startNodeValue+"_")!=-1)
+                               {
 
-      else //startNode's value and endNode's value exist
-      {
-       for(var i=0; i<outp.length; i++)
-          {
-      //Handling when case starts with given Start Node - when it ends in End Node or when it doesn't
-      if(outp[i].slice(0, outp[i].indexOf("_"))==startNodeValue)
-        {
-          if(outp[i].slice(outp[i].lastIndexOf("_")+1, outp[i].length)==endNodeValue)
-            semioutp.push(outp[i]);
+                                  if(outp[i].indexOf("_"+endNodeValue+"_")!=-1 || outp[i].slice(outp[i].lastIndexOf("_")+1, outp[i].length)==endNodeValue)
+                                    {
 
-          else if(outp[i].indexOf("_"+endNodeValue+"_")!=-1)
+                                          if(outp[i].slice(outp[i].lastIndexOf("_")+1, outp[i].length)==endNodeValue)
+                                           {
+                                            semioutp.push(outp[i].slice(outp[i].indexOf("_"+startNodeValue+"_")+1, outp[i].length));
+                                                       console.log(semioutp);
+                                           }
 
-           semioutp.push(outp[i].slice(0, outp[i].indexOf("_"+endNodeValue+"_")+("_"+endNodeValue+"_").length));
-                      console.log(semioutp);
-          
-        }
+                                           else if(outp[i].indexOf("_"+startNodeValue+"_") < outp[i].indexOf("_"+endNodeValue+"_"))
+                                           {
+                                            semioutp.push(outp[i].slice(outp[i].indexOf("_"+startNodeValue+"_")+1, outp[i].indexOf("_"+endNodeValue+"_")+("_"+endNodeValue+"_").length));
+                                                       console.log(semioutp);
+                                           }
 
-      //Handling when startNode isnt at start
-      else if(outp[i].indexOf("_"+startNodeValue+"_")!=-1)
-      {
+                                      }
 
-        if(outp[i].indexOf("_"+endNodeValue+"_")!=-1 || outp[i].slice(outp[i].lastIndexOf("_")+1, outp[i].length)==endNodeValue)
+                               }
 
-        {
+                     }
+                 }
+                    //Ensuring unique routes
+                    var uniqueRoutes = [];
+                    $.each(semioutp, function(i, el){
+                        if($.inArray(el, uniqueRoutes) === -1) uniqueRoutes.push(el);
+                    });
+                    console.log(semioutp);
+                    semioutp = uniqueRoutes;
+                    scope.displayCombinations(semioutp, nodes, links);
+             }
 
-          if(outp[i].slice(outp[i].lastIndexOf("_")+1, outp[i].length)==endNodeValue)
-           {
-            semioutp.push(outp[i].slice(outp[i].indexOf("_"+startNodeValue+"_")+1, outp[i].length));
-                       console.log(semioutp);
-           }
+            scope.displayCombinations = function(outputArray, nodes, links, first)
+            {
+                   //Display combinatiomns
+                //console.log(outputArray);
+                //Displaying
+                 var dataTable = [];
+                 for(var i=0; i<outputArray.length; i++)
+                  {
+                    var temparray = outputArray[i].split("_");
+                    var tempStatement = "";
+                    ////console.log(tempStatement);
+                    for(var j=0; j<temparray.length; j++)
+                    {
+                      for(var k=0; k<nodes.length;k++)
+                        if(nodes[k].id==temparray[j])
+                          tempStatement+=" -> "+nodes[k].text ;
 
-           else if(outp[i].indexOf("_"+startNodeValue+"_") < outp[i].indexOf("_"+endNodeValue+"_"))
-           {
-            semioutp.push(outp[i].slice(outp[i].indexOf("_"+startNodeValue+"_")+1, outp[i].indexOf("_"+endNodeValue+"_")+("_"+endNodeValue+"_").length));
-                       console.log(semioutp);
-           }
+                      for(var k=0; k<links.length;k++)
+                        if(links[k].id==temparray[j] && (links[k].text!=null || links[k].text==""))
+                          tempStatement+=" -> "+links[k].text ;
+                     }
+                    tempStatement = tempStatement.slice(4, tempStatement.length);
+                    var pushobject = {};
+                    pushobject.sno = i+1;
+                    pushobject.testcase = tempStatement
+                    dataTable.push(pushobject);
+                     // document.getElementById("testcases").innerHTML += "<li>"+ tempStatement + "\n </li>";
+             }
+            console.log(dataTable);
 
-        }
+              if(first=='Y')
+                backupArray = dataTable;
 
-      }
-
-      
-                  
-       
-    }
-  }
-
-  
-
-    //Ensuring unique routes
-    var uniqueRoutes = [];
-    $.each(semioutp, function(i, el){
-        if($.inArray(el, uniqueRoutes) === -1) uniqueRoutes.push(el);
-    });
-
-    console.log(semioutp);
-    semioutp = uniqueRoutes;
-    scope.displayCombinations(semioutp, nodes, links);
-    
-
-                }
-
-                scope.displayCombinations = function(outputArray, nodes, links, first)
-     {
-       //Display combinatiomns
-    //console.log(outputArray);
-    //Displaying
-     var dataTable = [];
-     for(var i=0; i<outputArray.length; i++)
-      {
-        var temparray = outputArray[i].split("_");
-        var tempStatement = "";
-        ////console.log(tempStatement);
-        for(var j=0; j<temparray.length; j++)
-        {
-          for(var k=0; k<nodes.length;k++)
-            if(nodes[k].id==temparray[j])
-              tempStatement+=" -> "+nodes[k].text ;
-
-          for(var k=0; k<links.length;k++)
-            if(links[k].id==temparray[j] && (links[k].text!=null || links[k].text==""))
-              tempStatement+=" -> "+links[k].text ;
-
-
-        
-
-        }
-        tempStatement = tempStatement.slice(4, tempStatement.length);
-        var pushobject = {};
-        pushobject.sno = i+1;
-        pushobject.testcase = tempStatement
-        dataTable.push(pushobject);
-        
-
-
-
-       // document.getElementById("testcases").innerHTML += "<li>"+ tempStatement + "\n </li>";
-      }
-      console.log(dataTable);
-
-      if(first=='Y')
-        backupArray = dataTable;
-
-      if(first=='R')
-      {
-        dataTable = backupArray;
-      }
-
-      $(document).ready(function() {
-          var table =  $('#testCaseTable').DataTable( {
-               data: dataTable,
-               select: {
-                   style: 'single'
-               },
-          dom: 'Bfrtip',
-          "bDestroy": true,
-          columns: [
-                  { title: 'S.No', data: 'sno'},
-                  { title: 'Test Case', data: 'testcase' }
-              ],
-          buttons: [
-                      {
-                          extend: 'copyHtml5',
-                          exportOptions: {
-                           columns: ':contains("Office")'
-                          }
-                      },
-                      'excelHtml5',
-                      'csvHtml5',
-                      'pdfHtml5'
-                  ]
-           });
-         table
-       .on('select', function (e, dt, type, index) {
-           var rowindex = table.row(this).index()//.data().toArray();
-           var blockId = semioutp[rowindex];
-       })
-       
-        } );
-      
-        
-      document.getElementById("numberofresults").innerHTML = "We generated "+outputArray.length+" test cases for you!\n";
-      
-
-     }
-
-     
-
-               
+              if(first=='R')
+              {
+                dataTable = backupArray;
+              }
                 
-            }            
-        }
-    }]);
+              $(document).ready(function() {
+                  var table =  $('#testCaseTable').DataTable( {
+                       data: dataTable,
+                       select: {
+                           style: 'single'
+                       },
+                  dom: 'Bfrtip',
+                  "bDestroy": true,
+                  columns: [
+                          { title: 'S.No', data: 'sno'},
+                          { title: 'Test Case', data: 'testcase' }
+                      ]
+                  });
+                  table.on('select', function (e, dt, type, index) {
+                      var rowindex = table.row(this).index();//.data().toArray();
+                      var blockId = semioutp[rowindex];
+                      console.log(blockId);
+                      var flowchartID = scope.$parent.itemSelected.flowChartID;
+                      var sendData =JSON.stringify({ flowchartID: flowchartID, BlockID: blockId });
+                      $http({
+                          method: 'POST',
+                          url: 'http://192.168.10.132:1337/getAllCoordinates',
+                          data: sendData,
+                          headers: {
+                              'Content-Type': 'application/json; charset=utf-8'
+                          }
+                      }).then(function successCallback(response) {
+                          item = response.data;
+                          $scope.showcar = true;
+                          
+                      }, function errorCallback(response) {
+                          console.log(response.statusText);
+                      });
+               })
+       
+       } );
+      
+       //       document.getElementById("numberofresults").innerHTML = "We generated "+outputArray.length+" test cases for you!\n";
+     }
+    }            
+   }
+ }]);
 
 

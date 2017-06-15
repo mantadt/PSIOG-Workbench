@@ -22,11 +22,11 @@
         margin-right: 0%;
         padding: 11px;
         border: 1px solid #888;
-        width: 20%;
+        width: auto;
         overflow-x: scroll;
-        height: auto%;
+        height: auto;
         /*float: right;*/
-        position: absolute;
+        position: relative;
         bottom: 0px;
         margin-left: 2px;
     }
@@ -84,6 +84,9 @@
     .slick-next:before {
         color: black;
     }
+    .tab-content > .tab-pane {
+        display: block;
+    }
 </style>
 
 
@@ -92,7 +95,7 @@
    
     <div class="row">
         <div class="col-lg-12">
-            <h1 class="page-header">Flowchart</h1>
+            <h1 class="page-header">Business Flows</h1>
                 
 
         </div>
@@ -143,42 +146,68 @@ Modify Flowchart
                                             </div>
                                         </div>
                                     </div>
-                                    <div id="myModal" class="modal modalpopup">
+                                    <div id="myModal" class="modal modalpopup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <span onclick="closepopup();" class="close">&times;</span>
+                                                    <h3 class="modal-title">File Ordering</h3>
 
-                                        <!-- Modal content -->
-                                        <div class="modal-content">
-                                            <div class="smallUploadBox" style="display: none">
-                                                <input type="file" id="fileUpload" />
-                                                <br />
-                                                <!--ng-click="UploadFile()"-->
-                                                <button class="btn-primary " ng-click="UploadFile()"  >Upload</button>
-                                                <button class="btn-primary " onclick="CanceluploadFile()">Cancel</button>
-                                               
-
-
-                                            </div>
-                                            <span onclick="closepopup();" class="close">&times;</span>
-                                            <i class="glyphicon glyphicon-cloud-upload smallUpload" onclick="openUpload('upload');" aria-hidden="true"></i>
-                                            <div class="widget-body">
-                                                <span id="spnKey" style="display: none"></span>
-                                                <a href="#"><span class="large label tag label-primary"><span id="spnText"></span></span></a>
-                                            </div>
-                                                <div id="viewError">
-                                                    <h6>No views to show.</h6>
                                                 </div>
-                                                <div id="imageLoader" style="align-content: center; display: none">
+                                                <!-- Modal content -->
+                                                <div class="modal-body">
+                                                    <div role="tabpanel">
+                                                        <ul class="nav nav-tabs" role="tablist" id="tabContent">
+                                                            <li><a href="#uploadFile" onclick="return ShowDivs();" data-toggle="tab">File Upload</a></li>
+                                                            <li class="active"><a href="#details" onclick="return loadImagesAsList();" id="ListTab" data-toggle="tab">File List View</a></li>
+                                                        </ul>
+                                                        <div class="tab-content">
+                                                            <div class="tab-pane fade " id="uploadFile">
+                                                                <div id="FileUploadDiv">
+                                                                    <div class="smallUploadBox">
+                                                                        <input type="file" id="fileUpload" />
+                                                                        <br />
+                                                                        <!--ng-click="UploadFile()"-->
+                                                                        <button class="btn-primary " ng-click="UploadFile()">Upload</button>
+                                                                        <button class="btn-primary " onclick="CanceluploadFile()">Cancel</button>
 
-                                                    <img src="img/ellipsis.gif" style="" />
-                                                </div>
-                                                <div id="viewList">
+
+
+                                                                    </div>
+
+                                                                    <!--<i class="glyphicon glyphicon-cloud-upload smallUpload" onclick="openUpload('upload');" aria-hidden="true"></i>-->
+                                                                    <div class="widget-body">
+                                                                        <span id="spnKey" style="display: none"></span>
+                                                                        <a href="#"><span class="large label tag label-primary"><span id="spnText"></span></span></a>
+                                                                    </div>
+                                                                    <div id="viewError">
+                                                                        <h6>No views to show.</h6>
+                                                                    </div>
+                                                                    <div id="imageLoader" style="align-content: center; display: none">
+
+                                                                        <img src="img/ellipsis.gif" style="" />
+                                                                    </div>
+                                                                </div>
+
+                                                                <div id="viewList" class="sortable">
+                                                                </div>
+                                                            </div>
+                                                            <div class="tab-pane fade active" id="details">
+                                                                <div id="ListView" class="sortable"></div>
+                                                                <div class="modal-footer">
+                                                                    <button class="btn btn-primary" ng-click="updateJSONData()">Save</button>
+                                                                </div>
+                                                            </div>
+                                                            <div id="divAssets" style="display: none">
+                                                                <table id="tableAssets" style="border: 1px solid; display: none" border="1"></table>
+                                                                <br />
+                                                            </div>
+                                                            <pre id="content" style="display: none"></pre>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div id="divAssets" style="display: none">
-                                                <table id="tableAssets" style="border: 1px solid; display: none" border="1"></table>
-                                                <br />
-                                            </div>
-                                            <pre id="content" style="display: none"></pre>
-                                         
+                                        </div>
                                     </div>
                                 </div>
                             </form>

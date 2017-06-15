@@ -98,7 +98,10 @@
                 var xmlHttpReqQueue = new Array();
                 function requestXHR(url, accessToken, iLoop) {
                     var xmlHttpReq;
-
+                    var str=url;
+                    var n = str.lastIndexOf("/");
+                    var m = str.indexOf("?");
+                    var fileId= str.substring(n+1,m);
                     xmlHttpReq = new XMLHttpRequest()
                     xmlHttpReq.onload = function () {
                         xmlHttpReqQueue.shift();
@@ -106,9 +109,8 @@
                         var base64 = 'data:image/png;base64,' + base64ArrayBufferDir(xmlHttpReq.response);
                         if (iLoop == 0)
                             vClass = "class='imgFirstClick'";
-
-                        divString += " <div><img height='50' " + vClass + " width='50' src='" + base64 + "' data-darkbox='" + base64 + "' data-darkbox-group='one'></div>";
-
+                        
+                        divString += " <div><img height='50' " + vClass + " width='50' src='" + base64 + "' data-darkbox='" + base64 + "' data-darkbox-group='one'"+" data-darkbox-description='" +fileId +"'></div>";
                         if (xmlHttpReqQueue.length > 0)
                             xmlHttpReqQueue[0].send(null);
                         else {
@@ -217,6 +219,7 @@
 
                     setReturnResult(obj);
                     loadImages();
+                    // loadImagesAsList();
                 }
 
 
@@ -680,7 +683,16 @@
         };
     })
 
-    .controller('MinimalCtrl', function ($scope, $rootScope, $http) {
+    //for sorting
+    .directive("sortable", function () {
+        return {
+            restrict: "C",
+            link: function (scope, element, attrs) {
+                element.sortable();
+            }
+        }
+    })
+    .controller('MinimalCtrl', function ($scope, $rootScope, $http, slideshowService) {
         $scope.model = new go.GraphLinksModel(
             [
                 { "category": "Start", "text": "Start", "key": -1, "loc": "-317 -502" },
@@ -697,12 +709,18 @@
             ]
         );
 
+        $scope.slideshow = function () {
+            slideshowService.getSlideshowJSON('00d86a61-e963-48cc-8e59-acf10a9cb213', '-1_-2_-4_-3_-6').then(function (res) {
+                var data = res;
+            });
+        }
+
         $scope.saveUsability = function(){
             flowchartID = $scope.itemSelected.flowChartID;
             blockID = $scope.blkid; 
             var item = { "flowchartID": flowchartID, "blockID": blockID,  "coordinates": coordinates};
             var data  = angular.toJson(item, true)
-            console.log(data);
+            
             
             var url = 'http://192.168.10.132:1337/addCoordinates';
            // console.log(item);
@@ -720,9 +738,11 @@
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     
-                    console.log('error ' + textStatus + " " + errorThrown);
+                   console.log('error ' + textStatus + " " + errorThrown);
                 }
             });
+            document.getElementById("EditScreen").style.zIndex = 0;
+            document.getElementById("EditScreen").style.display ="none";
         }
 
         $scope.model.selectedNodeData = null;
@@ -778,47 +798,45 @@
 
 
         $scope.UploadFile = function () {
-
+            
             insertFile(document.getElementById("fileUpload").files[0], function (response) {
-                notifySuccess();
                 var fileUnID = GUID();
                 GUID.register(fileUnID);
 
                 returnResult.assets.push({ fileID: fileUnID, assetType: response.mimeType, assetName: response.name, assetURL: response.id });
                 document.getElementById("fileUpload").value = "";
 
-                if (document.getElementById("tableAssets").getElementsByTagName("tr").length == 0) {
-                    //<td>UrlFragment</td>
-                    var header = "<tr style='font-weight:bold;'><td>Type</td><td>Name</td></tr>";
-                    document.getElementById("tableAssets").innerHTML = header;
-                }
-
-                document.getElementById("divAssets").style.display = "";
-                var row = document.getElementById("tableAssets").insertRow(1);
-                (row.insertCell(0)).innerHTML = response.mimeType;
-                (row.insertCell(1)).innerHTML = "<a src='" + response.id + "'>" + response.name + "</a>";
-                (row.insertCell(2)).innerHTML = response.id;
 
                 var Key = document.getElementById('spnKey');
                 var jsondata = $scope.model.toJson();
                 var data = JSON.parse(jsondata);  //parse the JSON
                 var resStr;
 
+                var OrderCount = 0;
                 $.each(data.nodeDataArray, function (i, el) {
                     var newdata;
                     if (this.key === parseInt(Key.innerHTML)) {
-                        if (!this.assets)
+                        if (!this.assets) {
                             this.assets = [];
-                        this.assets.push({ fileID: fileUnID, assetType: response.mimeType, assetName: response.name, assetURL: response.id });
+                            OrderCount = 0;
+                        }
+                        else
+                            OrderCount = this.assets.length;
+                        this.assets.push({ fileID: fileUnID, assetType: response.mimeType, assetName: response.name, assetURL: response.id, Order: OrderCount });
                         resStr = JSON.stringify(data);
+
                     }
                 });
                 $scope.model = go.Model.fromJson(data);
                 $scope.model.setDataProperty('lastModified', (new Date()).toString());
                 // document.getElementById("mySavedModel").value = myDiagram.model.toJson();
                 console.log(JSON.stringify(data));
+                notifySuccess();
+
+
 
                 loadImages();
+                //loadImagesAsList();
             });
 
         }
@@ -849,6 +867,45 @@
                 });
             }
 
+        }
+        $scope.updateJSONData = function () {
+            
+            var indexOrder = [];
+            $('#ListView div ').each(function (i) {
+                var eachdivindex = $(this).index();
+                var filename = $(this).attr('id');
+                indexOrder.push({ assetURL: filename, Order: eachdivindex });
+            });
+            var jsonValforOrder = JSON.stringify(indexOrder);
+            $scope.funcMergeJson(jsonValforOrder);
+            //console.log(json);
+        }
+        $scope.funcMergeJson = function (fileorders) {
+            var jsonData = $scope.model.toJson();
+            
+            var data = JSON.parse(jsonData);
+            var orderData = JSON.parse(fileorders);
+            //var Count = Object.keys(fileorders).length;
+            for (var iL = 0; iL < data.nodeDataArray.length; iL++) {
+                var item = data.nodeDataArray[iL];
+                if (item.key == $scope.blkid) {
+                    if (item.assets) {
+                        for (var jL = 0; jL < item.assets.length; jL++) {
+                            for (var kL = 0; kL < orderData.length; kL++) {
+                                if (item.assets[jL].assetURL == orderData[kL].assetURL) {
+                                    item.assets[jL].Order = orderData[kL].Order;
+                                    break;
+                                }
+                            }
+                        }
+                        returnResult.assets = item.assets;
+                        break;
+                    }
+                }
+            }
+            var FinalData = JSON.stringify(data);
+            $scope.model = go.Model.fromJson(FinalData);
+            console.log($scope.model);
         }
     });
 
@@ -931,6 +988,7 @@ function openTab(evt, tabName) {
     evt.currentTarget.className += " active";
 
     loadImages();
+    // loadImagesAsList();
 }
 
 function setReturnResult(value) {
@@ -1099,10 +1157,10 @@ function insertFile(fileData, callback) {
 var isXHRrunning = false;
 async function loadImages() {
     var bool = false;
-
+    
     if (returnResult.assets.length > 0) {
         var accessToken = gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().access_token;
-        var divString = "<section class='regular slider sortable'>";
+        var divString = "<section class='regular slider '>";
 
         var viewList = document.getElementById("viewList");
         for (var iLoop = 0; iLoop < returnResult.assets.length; iLoop++) {
@@ -1125,7 +1183,7 @@ async function loadImages() {
                     var base64 = 'data:image/png;base64,' + base64ArrayBuffer(xhr.response);
 
                     //"' data-darkbox='" + base64 + "'data-darkbox-group='one'/></div>
-                    divString += " <div><img  height='50' width='50' src='" + base64 + "' data-darkbox='" + base64 + "'data-darkbox-group='one'></div>";
+                    divString += " <div><img id='" + values.assetURL + "' height='50' width='50' src='" + base64 + "' data-darkbox='" + base64 + "'data-darkbox-group='one'></div>";
                     //var divOuter = document.createElement("div");
 
                     //divString += "<b>" + values.assetName + "</b>";
@@ -1144,7 +1202,7 @@ async function loadImages() {
 
                 xhr.send();
 
-                //checkXHRAvailable();
+                checkXHRAvailable();
                 await sleep(5000);
                 jLoop++;
             }
@@ -1161,13 +1219,11 @@ async function loadImages() {
             slidesToScroll: 2
         });
 
-
     }
 
     if (!bool)
         swapDivs(0);
 }
-
 async function checkXHRAvailable() {
     if (isXHRrunning) {
         await sleep(2000);
@@ -1301,5 +1357,81 @@ function printFile(fileId, $scope) {
         $scope.model.diagram = go.Model.fromJson(jsondata);
     }
     xhr.send();
+}
+// To load the list of files
+var divStringIL;
+function loadImagesAsList() {
+    $('#uploadFile').hide();
+    $('#details').show();
+    var bool = false;
+    divStringIL = "";
+
+    returnResult.assets.sort(function (a, b) {       
+            return a.Order - b.Order;    
+    });
+
+    if (returnResult.assets && returnResult.assets.length > 0) {
+        PNotify.removeAll();
+        var accessToken = gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().access_token;
+
+        for (var iLoop = 0; iLoop < returnResult.assets.length; iLoop++) {
+            var values = returnResult.assets[iLoop];
+
+            if (values.assetType.indexOf("image") >= 0) {
+                var vClass = "";
+
+                bool = true;
+                values.visited = true;
+                var fileId = values.fileID;
+
+                divStringIL += " <div id='" + values.assetURL + "'style='border: 1px solid;margin: 5px;width: 48%;background-color: lavender;font-weight: bold;text-align: center;'>" + values.assetName + "</div>";
+                //requestXHRLI("https://www.googleapis.com/drive/v3/files/" + fileId + '?alt=media', accessToken, values.assetURL);
+            }
+
+        }
+
+        var viewList = document.getElementById("ListView");
+        divStringIL += "</div>";
+        viewList.innerHTML = divStringIL;
+    }
+    else
+        notifyUSFailure();
+}
+
+var xmlHttpReqQueueIL = new Array();
+function requestXHRLI(url, accessToken, assetURL) {
+    var xmlHttpReq;
+
+    xmlHttpReq = new XMLHttpRequest()
+    xmlHttpReq.onload = function () {
+        xmlHttpReqQueueIL.shift();
+
+        var base64 = 'data:image/png;base64,' + base64ArrayBuffer(xmlHttpReq.response);
+
+        divStringIL += " <div><img id='" + assetURL + "' height='50' width='50' src='" + base64 + "'></div><br/>";
+
+        if (xmlHttpReqQueueIL.length > 0)
+            xmlHttpReqQueueIL[0].send(null);
+        else {
+            var viewList = document.getElementById("ListView");
+            divStringIL += "</div>";
+            viewList.innerHTML = divStringIL;
+        }
+    }
+
+    xmlHttpReq.open('GET', url, true);
+    xmlHttpReq.setRequestHeader('Authorization', 'Bearer ' + accessToken);
+    xmlHttpReq.responseType = 'arraybuffer';
+    xmlHttpReqQueueIL.push(xmlHttpReq);
+
+    if (xmlHttpReqQueueIL.length == 1) {
+        xmlHttpReq.send(null);
+    }
+}
+
+
+function ShowDivs() {
+    $('#uploadFile').show();
+    $('#details').hide();
 }
 

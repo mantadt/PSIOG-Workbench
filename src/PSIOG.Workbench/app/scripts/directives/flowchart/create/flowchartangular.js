@@ -692,7 +692,7 @@
             }
         }
     })
-    .controller('MinimalCtrl', function ($scope, $rootScope, $http) {
+    .controller('MinimalCtrl', function ($scope, $rootScope, $http, slideshowService) {
         $scope.model = new go.GraphLinksModel(
             [
                 { "category": "Start", "text": "Start", "key": -1, "loc": "-317 -502" },
@@ -708,6 +708,12 @@
                 { "from": -3, "to": -6, "fromPort": "B", "toPort": "T", "visible": true, "points": [-317, -240.90000000000003, -317, -230.90000000000003, -317, -212.87441860465117, -315, -212.87441860465117, -315, -194.84883720930233, -315, -184.84883720930233] }
             ]
         );
+
+        $scope.slideshow = function () {
+            slideshowService.getSlideshowJSON('00d86a61-e963-48cc-8e59-acf10a9cb213', '-1_-2_-4_-3_-6').then(function (res) {
+                var data = res;
+            });
+        }
 
         $scope.saveUsability = function(){
             flowchartID = $scope.itemSelected.flowChartID;

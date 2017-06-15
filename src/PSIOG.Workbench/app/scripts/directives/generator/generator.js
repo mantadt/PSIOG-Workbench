@@ -113,7 +113,7 @@ angular.module('sbAdminApp')
                             $.each(json.linkDataArray, function () {
                                 var myGuid = GUID();
                                 GUID.register(myGuid);
-                                obj.links.push({ from: this.from, to: this.to, text: "", id: myGuid }); //generateUniqueNumber(loop)
+                                obj.links.push({ from: this.from, to: this.to, text: this.text, id: myGuid }); //generateUniqueNumber(loop)
                                 loop++;
                             })
 

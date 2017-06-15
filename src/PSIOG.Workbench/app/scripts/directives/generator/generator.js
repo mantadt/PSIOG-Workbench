@@ -113,7 +113,7 @@ angular.module('sbAdminApp')
                             $.each(json.linkDataArray, function () {
                                 var myGuid = GUID();
                                 GUID.register(myGuid);
-                                obj.links.push({ from: this.from, to: this.to, text: "", id: myGuid }); //generateUniqueNumber(loop)
+                                obj.links.push({ from: this.from, to: this.to, text: this.text, id: myGuid }); //generateUniqueNumber(loop)
                                 loop++;
                             })
 
@@ -302,22 +302,28 @@ angular.module('sbAdminApp')
     //Displaying
      var dataTable = [];
      for(var i=0; i<outputArray.length; i++)
-      {
-        var temparray = outputArray[i].split("_");
-        var tempStatement = "";
-        ////console.log(tempStatement);
+     {
+         var testroutes = [];
+         var teststmt = "";
+         var temparray = outputArray[i].split("_");
+          var tempStatement = "";
+        console.log("  ");
         for(var j=0; j<temparray.length; j++)
         {
           for(var k=0; k<nodes.length;k++)
-            if(nodes[k].id==temparray[j])
-              tempStatement+=" -> "+nodes[k].text ;
+              if (nodes[k].id == temparray[j])
+              {
+                  tempStatement += " -> " + nodes[k].text;
+                  teststmt += nodes[k].id+"_" ;
+              }
+             
 
           for(var k=0; k<links.length;k++)
             if(links[k].id==temparray[j] && (links[k].text!=null || links[k].text==""))
               tempStatement+=" -> "+links[k].text ;
 
 
-        
+          
 
         }
         tempStatement = tempStatement.slice(4, tempStatement.length);
@@ -325,8 +331,8 @@ angular.module('sbAdminApp')
         pushobject.sno = i+1;
         pushobject.testcase = tempStatement
         dataTable.push(pushobject);
-        
-
+        testroutes.push(teststmt);
+        console.log(teststmt);
 
 
        // document.getElementById("testcases").innerHTML += "<li>"+ tempStatement + "\n </li>";

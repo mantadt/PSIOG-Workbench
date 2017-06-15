@@ -712,29 +712,38 @@
         $scope.saveUsability = function(){
             flowchartID = $scope.itemSelected.flowChartID;
             blockID = $scope.blkid; 
-            var item = { "flowchartID": flowchartID, "blockID": blockID,  "coordinates": coordinates};
-            var data  = angular.toJson(item, true)
-            
-            
-            var url = 'http://192.168.10.132:1337/addCoordinates';
-           // console.log(item);
-            $.ajax({
-                crossDomain:"true",
-                type:"POST",
-                url: url,
-                data :  data,
-                cache: false,
-                timeout: 50000,
-                contentType :"application/json",
-                success: function(response){ 
-                    console.log(response);
+            var imageCount = finalCords.length;
+           
+            for(var i =0; i<imageCount ; i++)
+            {
+                var item = { "flowchartID": flowchartID, "blockID": blockID, "FileID" : finalCords[i].ImageID, "coordinates":  finalCords[i].coordinates};
+                var data  = angular.toJson(item, true);
+                var url = 'http://192.168.10.132:1337/addCoordinates';
+               // console.log("post");
+                console.log(JSON.stringify(data));
+                $.ajax({
+                    crossDomain:"true",
+                    type:"POST",
+                    url: url,
+                    data :  data,
+                    cache: false,
+                    timeout: 50000,
+                    contentType :"application/json",
+                    success: function(response){ 
+                        console.log(response);
                    
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
                     
-                   console.log('error ' + textStatus + " " + errorThrown);
-                }
-            });
+                        console.log('error ' + textStatus + " " + errorThrown);
+                    }
+                });
+            }
+            
+           
+            
+            
+           
             document.getElementById("EditScreen").style.zIndex = 0;
             document.getElementById("EditScreen").style.display ="none";
         }

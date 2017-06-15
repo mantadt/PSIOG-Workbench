@@ -1,4 +1,5 @@
 /// <reference path="../../../views/ui-elements/ViewPresentations.html" />
+/// <reference path="../../../views/ui-elements/ViewPresentations.html" />
 'use strict';
 
 /**
@@ -12,11 +13,11 @@
 
 
 angular.module('sbAdminApp')
-    .directive('genAndView', ['generatorService', function (generatorService) {       
+    .directive('genandview', ['generatorService', function (generatorService) {
         return {
-            templateUrl: 'views/ui-elements/ViewPresentations.html',
+            templateUrl: 'scripts/directives/genAndView/genandview.html',
             //template : '<p>HELLO</p>',
-            restrict: 'E',            
+            restrict: 'E',
             link: function (scope) {
                 scope.xmlpaste = '';
                 scope.pastexml = true;
@@ -24,8 +25,11 @@ angular.module('sbAdminApp')
                 scope.toggleJsonXml = function () {
                     scope.jsonxmltoggle = !scope.jsonxmltoggle;
                 }
-                $scope.showcar = false;
+                scope.ddlValueChanged = function () {
+                    console.log(scope.itemSelected);
+                }
                 scope.jsonfiles = ["1.json", "2.json"];
+                var testroutes = [];
                 var nodes = [];
                 var links = [];
                 var outp = [];
@@ -35,11 +39,8 @@ angular.module('sbAdminApp')
                 scope.clickedGenerate = function (flag) {
 
                     if (flag)
-                    {
-                        scope.displayCombinations(outp, nodes, links);
-                    }
-                    else
-                    {
+                    { scope.displayCombinations(outp, nodes, links); }
+                    else {
                         scope.loader = true;
                         scope.pastexml = false;
                         generatorService.generateFromXml(scope.xmlpaste)
@@ -87,70 +88,114 @@ angular.module('sbAdminApp')
                 }
 
                 scope.clickedGenerateJSON = function (flag) {
+
                     if (flag)
-                    {
-                        scope.displayCombinations(outp, nodes, links);
-                    }
-                    else
-                    {
+                    { scope.displayCombinations(outp, nodes, links); }
+                    else {
                         scope.loader = true;
                         scope.pastexml = false;
                         //Pass on the JSON file name, pull in the JSON data, and send it to the generator Service
-                        generatorService.generateFromJson()
-                            .then(function (success) {
 
-                                scope.loader = false;
-                                scope.results = true;
-                                nodes = success.data.nodes;
-                                links = success.data.links;
-                                resultsData = success.data.results;
-                                outp = resultsData;
-                                jQuery('<option/>', {
-                                    value: -1,
-                                    html: " "
-                                }).appendTo('#startNode');
+                        generatorService.getJsonValue(scope.itemSelected.flowChartID)
+                        .then(function (pass) {
 
-                                for (var i = 0; i < nodes.length; i++) {
-                                    //creates option tag
-                                    jQuery('<option/>', {
-                                        value: nodes[i].id,
-                                        html: nodes[i].text
-                                    }).appendTo('#startNode'); //appends to select if parent div has id dropdown
-                                }
+                            var json = pass.data.Flowchart[0];
+                            var obj = { nodes: [], links: [] };
 
-                                jQuery('<option/>', {
-                                    value: -1,
-                                    html: " "
-                                }).appendTo('#endNode');
+                            var loop = 0;
+                            $.each(json.nodeDataArray, function () {
+                                var primary = 'N';
+                                if (loop == 0)
+                                    primary = 'P';
+                                obj.nodes.push({ id: this.key, text: this.text, primary: primary });
+                                loop++;
+                            });
 
-                                for (var i = 0; i < nodes.length; i++) {
-                                    //creates option tag
-                                    jQuery('<option/>', {
-                                        value: nodes[i].id,
-                                        html: nodes[i].text
-                                    }).appendTo('#endNode'); //appends to select if parent div has id dropdown
-                                }
-                                scope.startNode = -1;
-                                scope.endNode = -1;
+                            loop = 0;
 
-                                scope.displayCombinations(outp, nodes, links);
-                                console.log(success);
-                            }, function (failure) { console.log(failure); });
+                            $.each(json.linkDataArray, function () {
+                                var myGuid = GUID();
+                                GUID.register(myGuid);
+                                obj.links.push({ from: this.from, to: this.to, text: this.text, id: myGuid }); //generateUniqueNumber(loop)
+                                loop++;
+                            })
+
+
+                           // console.log(obj);
+
+                            generatorService.generateFromJson(obj)
+                              .then(function (success) {
+
+                                  scope.loader = false;
+                                  scope.results = true;
+                                  nodes = success.data.nodes;
+                                  links = success.data.links;
+                                  resultsData = success.data.results;
+                                  outp = resultsData;
+                                  jQuery('<option/>', {
+                                      value: -1,
+                                      html: " "
+                                  }).appendTo('#startNode');
+
+                                  for (var i = 0; i < nodes.length; i++) {
+                                      //creates option tag
+                                      jQuery('<option/>', {
+                                          value: nodes[i].id,
+                                          html: nodes[i].text
+                                      }).appendTo('#startNode'); //appends to select if parent div has id dropdown
+                                  }
+
+                                  jQuery('<option/>', {
+                                      value: -1,
+                                      html: " "
+                                  }).appendTo('#endNode');
+
+
+                                  for (var i = 0; i < nodes.length; i++) {
+                                      //creates option tag
+                                      jQuery('<option/>', {
+                                          value: nodes[i].id,
+                                          html: nodes[i].text
+                                      }).appendTo('#endNode'); //appends to select if parent div has id dropdown
+                                  }
+                                  scope.startNode = -1;
+                                  scope.endNode = -1;
+
+                                  scope.displayCombinations(outp, nodes, links);
+                                  console.log(success);
+                              }, function (failure) { console.log(failure); });
+
+
+
+                        }, function (fail) { });
+
                     }
                 }
 
-                scope.nodeList = function ()
-                {
+                scope.goBack = function () {
+                    scope.pastexml = true;
+                    scope.results = false;
+                    nodes = [];
+                    links = [];
+                    //resultsData = [];
+                    outp = [];
+
+
+                }
+
+                scope.nodeList = function () {
 
                     semioutp = [];
                     //outp = resultsData;
-                    //console.log(outp);
+                  //  console.log(outp);
+
+
                     // var startNode = scope.startNode;
                     var startNodeValue = scope.startNode;
 
                     //var endNode = document.getElementById("endNode");
                     //var endNodeValue = endNode.options[endNode.selectedIndex].value;
-                   // console.log(startNodeValue);
+                //    console.log(startNodeValue);
 
                     //var endNode = document.getElementById("endNode");
                     var endNodeValue = scope.endNode;
@@ -158,164 +203,191 @@ angular.module('sbAdminApp')
 
 
                     if (startNodeValue == -1 && endNodeValue == -1)
+                    { semioutp = outp; }
+                    if (startNodeValue != -1 && endNodeValue == -1) //startNode's value and endNode's value doesnt exist
                     {
-                        semioutp = outp;
-                    }
-                    if(startNodeValue!=-1 && endNodeValue==-1) //startNode's value and endNode's value doesnt exist
-                    {
-                        for(var i=0; i<outp.length; i++)
-                        {
-                            if(outp[i].slice(0, outp[i].indexOf("_"))==startNodeValue)
+                        for (var i = 0; i < outp.length; i++) {
+                            if (outp[i].slice(0, outp[i].indexOf("_")) == startNodeValue)
                                 semioutp.push(outp[i]);
 
-                            if(outp[i].indexOf("_"+startNodeValue+"_")!=-1)
-                               semioutp.push(outp[i].slice(outp[i].indexOf("_"+startNodeValue+"_")+1, outp[i].length));
-                            console.log(semioutp);
+                            if (outp[i].indexOf("_" + startNodeValue + "_") != -1)
+
+                                semioutp.push(outp[i].slice(outp[i].indexOf("_" + startNodeValue + "_") + 1, outp[i].length));
+                    //        console.log(semioutp);
+
+
                         }
                     }
 
-                    if(endNodeValue!=-1 && startNodeValue==-1) //startNode's value doesnt and endNode's value exist
+                    if (endNodeValue != -1 && startNodeValue == -1) //startNode's value doesnt and endNode's value exist
                     {
-                       for(var i=0; i<outp.length; i++)
-                       {
-                            if(outp[i].slice(outp[i].lastIndexOf("_")+1, outp[i].length)==endNodeValue)
+                        for (var i = 0; i < outp.length; i++) {
+
+                            if (outp[i].slice(outp[i].lastIndexOf("_") + 1, outp[i].length) == endNodeValue)
                                 semioutp.push(outp[i]);
 
-                            else if(outp[i].indexOf("_"+endNodeValue+"_")!=-1)
-                               semioutp.push(outp[i].slice(0, outp[i].indexOf("_"+endNodeValue+"_")+("_"+endNodeValue+"_").length));
-                            console.log(semioutp);
+                            else if (outp[i].indexOf("_" + endNodeValue + "_") != -1)
 
-                       }
+                                semioutp.push(outp[i].slice(0, outp[i].indexOf("_" + endNodeValue + "_") + ("_" + endNodeValue + "_").length));
+                       //     console.log(semioutp);
+
+                        }
                     }
 
                     else //startNode's value and endNode's value exist
                     {
-                       for(var i=0; i<outp.length; i++)
-                       {
-                              //Handling when case starts with given Start Node - when it ends in End Node or when it doesn't
-                              if(outp[i].slice(0, outp[i].indexOf("_"))==startNodeValue)
-                              {
-                                  if(outp[i].slice(outp[i].lastIndexOf("_")+1, outp[i].length)==endNodeValue)
+                        for (var i = 0; i < outp.length; i++) {
+                            //Handling when case starts with given Start Node - when it ends in End Node or when it doesn't
+                            if (outp[i].slice(0, outp[i].indexOf("_")) == startNodeValue) {
+                                if (outp[i].slice(outp[i].lastIndexOf("_") + 1, outp[i].length) == endNodeValue)
                                     semioutp.push(outp[i]);
 
-                                  else if(outp[i].indexOf("_"+endNodeValue+"_")!=-1)
-                                   semioutp.push(outp[i].slice(0, outp[i].indexOf("_"+endNodeValue+"_")+("_"+endNodeValue+"_").length));
-                                  console.log(semioutp);
-                               }
-                                  //Handling when startNode isnt at start
-                               else if(outp[i].indexOf("_"+startNodeValue+"_")!=-1)
-                               {
+                                else if (outp[i].indexOf("_" + endNodeValue + "_") != -1)
 
-                                  if(outp[i].indexOf("_"+endNodeValue+"_")!=-1 || outp[i].slice(outp[i].lastIndexOf("_")+1, outp[i].length)==endNodeValue)
-                                    {
+                                    semioutp.push(outp[i].slice(0, outp[i].indexOf("_" + endNodeValue + "_") + ("_" + endNodeValue + "_").length));
+                     //           console.log(semioutp);
 
-                                          if(outp[i].slice(outp[i].lastIndexOf("_")+1, outp[i].length)==endNodeValue)
-                                           {
-                                            semioutp.push(outp[i].slice(outp[i].indexOf("_"+startNodeValue+"_")+1, outp[i].length));
-                                                       console.log(semioutp);
-                                           }
+                            }
 
-                                           else if(outp[i].indexOf("_"+startNodeValue+"_") < outp[i].indexOf("_"+endNodeValue+"_"))
-                                           {
-                                            semioutp.push(outp[i].slice(outp[i].indexOf("_"+startNodeValue+"_")+1, outp[i].indexOf("_"+endNodeValue+"_")+("_"+endNodeValue+"_").length));
-                                                       console.log(semioutp);
-                                           }
+                                //Handling when startNode isnt at start
+                            else if (outp[i].indexOf("_" + startNodeValue + "_") != -1) {
 
-                                      }
+                                if (outp[i].indexOf("_" + endNodeValue + "_") != -1 || outp[i].slice(outp[i].lastIndexOf("_") + 1, outp[i].length) == endNodeValue) {
 
-                               }
+                                    if (outp[i].slice(outp[i].lastIndexOf("_") + 1, outp[i].length) == endNodeValue) {
+                                        semioutp.push(outp[i].slice(outp[i].indexOf("_" + startNodeValue + "_") + 1, outp[i].length));
+                                   //     console.log(semioutp);
+                                    }
 
-                     }
-                 }
+                                    else if (outp[i].indexOf("_" + startNodeValue + "_") < outp[i].indexOf("_" + endNodeValue + "_")) {
+                                        semioutp.push(outp[i].slice(outp[i].indexOf("_" + startNodeValue + "_") + 1, outp[i].indexOf("_" + endNodeValue + "_") + ("_" + endNodeValue + "_").length));
+                           //             console.log(semioutp);
+                                    }
+
+                                }
+
+                            }
+
+
+
+
+                        }
+                    }
+
+
+
                     //Ensuring unique routes
                     var uniqueRoutes = [];
-                    $.each(semioutp, function(i, el){
-                        if($.inArray(el, uniqueRoutes) === -1) uniqueRoutes.push(el);
+                    $.each(semioutp, function (i, el) {
+                        if ($.inArray(el, uniqueRoutes) === -1) uniqueRoutes.push(el);
                     });
-                    console.log(semioutp);
+
+                   // console.log(semioutp);
                     semioutp = uniqueRoutes;
                     scope.displayCombinations(semioutp, nodes, links);
-             }
 
-            scope.displayCombinations = function(outputArray, nodes, links, first)
-            {
-                   //Display combinatiomns
-                //console.log(outputArray);
-                //Displaying
-                 var dataTable = [];
-                 for(var i=0; i<outputArray.length; i++)
-                  {
-                    var temparray = outputArray[i].split("_");
-                    var tempStatement = "";
-                    ////console.log(tempStatement);
-                    for(var j=0; j<temparray.length; j++)
-                    {
-                      for(var k=0; k<nodes.length;k++)
-                        if(nodes[k].id==temparray[j])
-                          tempStatement+=" -> "+nodes[k].text ;
 
-                      for(var k=0; k<links.length;k++)
-                        if(links[k].id==temparray[j] && (links[k].text!=null || links[k].text==""))
-                          tempStatement+=" -> "+links[k].text ;
-                     }
-                    tempStatement = tempStatement.slice(4, tempStatement.length);
-                    var pushobject = {};
-                    pushobject.sno = i+1;
-                    pushobject.testcase = tempStatement
-                    dataTable.push(pushobject);
-                     // document.getElementById("testcases").innerHTML += "<li>"+ tempStatement + "\n </li>";
-             }
-            console.log(dataTable);
+                }
 
-              if(first=='Y')
-                backupArray = dataTable;
+                scope.displayCombinations = function (outputArray, nodes, links, first) {
+                    //Display combinatiomns
+                    //console.log(outputArray);
+                    //Displaying
+                    var dataTable = [];
+                    for (var i = 0; i < outputArray.length; i++) {
+                        
+                        var teststmt = "";
+                        var temparray = outputArray[i].split("_");
+                        var tempStatement = "";
+                    //    console.log("  ");
+                        for (var j = 0; j < temparray.length; j++) {
+                            for (var k = 0; k < nodes.length; k++)
+                                if (nodes[k].id == temparray[j]) {
+                                    tempStatement += " -> " + nodes[k].text;
+                                    teststmt += nodes[k].id + "_";
+                                }
 
-              if(first=='R')
-              {
-                dataTable = backupArray;
-              }
-                
-              $(document).ready(function() {
-                  var table =  $('#testCaseTable').DataTable( {
-                       data: dataTable,
-                       select: {
-                           style: 'single'
-                       },
-                  dom: 'Bfrtip',
-                  "bDestroy": true,
-                  columns: [
-                          { title: 'S.No', data: 'sno'},
-                          { title: 'Test Case', data: 'testcase' }
-                      ]
-                  });
-                  table.on('select', function (e, dt, type, index) {
-                      var rowindex = table.row(this).index();//.data().toArray();
-                      var blockId = semioutp[rowindex];
-                      console.log(blockId);
-                      var flowchartID = scope.$parent.itemSelected.flowChartID;
-                      var sendData =JSON.stringify({ flowchartID: flowchartID, BlockID: blockId });
-                      $http({
-                          method: 'POST',
-                          url: 'http://192.168.10.132:1337/getAllCoordinates',
-                          data: sendData,
-                          headers: {
-                              'Content-Type': 'application/json; charset=utf-8'
-                          }
-                      }).then(function successCallback(response) {
-                          item = response.data;
-                          $scope.showcar = true;
-                          
-                      }, function errorCallback(response) {
-                          console.log(response.statusText);
-                      });
-               })
-       
-       } );
-      
-       //       document.getElementById("numberofresults").innerHTML = "We generated "+outputArray.length+" test cases for you!\n";
-     }
-    }            
-   }
- }]);
+
+                            for (var k = 0; k < links.length; k++)
+                                if (links[k].id == temparray[j] && (links[k].text != null || links[k].text == ""))
+                                    tempStatement += " -> " + links[k].text;
+
+
+
+
+                        }
+                        tempStatement = tempStatement.slice(4, tempStatement.length);
+                        var pushobject = {};
+                        pushobject.sno = i + 1;
+                        pushobject.testcase = tempStatement
+                        dataTable.push(pushobject);
+                        testroutes.push(teststmt);
+                       // console.log(teststmt);
+
+
+                        // document.getElementById("testcases").innerHTML += "<li>"+ tempStatement + "\n </li>";
+                    }
+                //    console.log(dataTable);
+
+                    if (first == 'Y')
+                        backupArray = dataTable;
+
+                    if (first == 'R') {
+                        dataTable = backupArray;
+                    }
+
+                    $(document).ready(function () {
+                       var table= $('#testCaseTable').DataTable({
+                         data: dataTable,
+                         select: true,
+                            dom: 'Bfrtip',
+                            "bDestroy": true,
+                            columns: [
+                                    { title: 'S.No', data: 'sno' },
+                                    { title: 'Test Case', data: 'testcase' }
+                            ]
+                       });
+
+                       $('#testCaseTable tbody').on('click', 'tr', function () {
+                           console.log(table.row(this).index());
+                       });
+                      //table.on('select', function (e, dt, type, index) {
+                      //      var rowindex = table.row(this).index();//.data().toArray();
+                      //      var blockId = testroutes[rowindex];
+                      //      console.log(blockId);
+                      //      var flowchartID = scope.$parent.itemSelected.flowChartID;
+                      //      var sendData = JSON.stringify({ "flowchartID": flowchartID, "BlockID": blockId });
+                      //      $http({
+                      //          method: 'POST',
+                      //          url: 'http://192.168.10.132:1337/getAllCoordinates',
+                      //          data: sendData,
+                      //          headers: {
+                      //              'Content-Type': 'application/json; charset=utf-8'
+                      //          }
+                      //      }).then(function successCallback(response) {
+                      //          item = response.data;
+                      //          $scope.showcar = true;
+
+                      //      }, function errorCallback(response) {
+                      //          console.log(response.statusText);
+                      //      });
+                      //  })
+
+
+                    });
+
+
+                  //  document.getElementById("numberofresults").innerHTML = "We generated " + outputArray.length + " test cases for you!\n";
+
+
+                }
+
+
+
+
+
+            }
+        }
+    }]);
 
 

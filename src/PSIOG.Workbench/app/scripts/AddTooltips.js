@@ -10,52 +10,49 @@ var flowchartID;
 var blockID;
 var imgs = [];
 var imageID;
-$(document).ready(function () {
-    
-    ImgListen.addEventListener('mousedown', handler);
-    
-});
- 
-if (ImgListen.classList.contains('show'))
-{
+var finalCords = [];
 
+
+$(document).ready(function () {
+       ImgListen.addEventListener('mousedown', handleClick);
+});
+
+
+function handleClick(event) {
+    document.getElementById("EditScreen").style.zIndex = 999999;
+    document.getElementById("EditScreen").style.display = "block";
+    imageID = ImgListen.getAttribute("data-title");
+    var offset = $("#darkbox").offset;
+    var x = event.clientX - 24;//- offset.left;
+    var y = event.clientY - 24;// - offset.top;
+    console.log(x+ "'"+y);
+    var message = prompt("Enter tooltip text:");
+    if (message != null) {
+        if (message.length != 0) {
+            storeMessage(message, x, y, imageID);
+            document.getElementById("clear").disabled = false;
+            document.getElementById("downloadbtn").disabled = false;
+            document.getElementById("anim").disabled = false;
+        }
+    }
 }
 
 function saveList()
 {
-
+   
     for (var i = 0; i < count; i++) {
         // store messages and coordinates in json
-
         var xcx = xcord[i] * 100 / window.innerWidth;
         var ycy = ycord[i] * 100 / window.innerHeight;
-        var cords = { "FileID": imgs[i], "XCP": xcx, "YCP": ycy, "xc": xcord[i], "yc": ycord[i], "order": i + 1, "message": str[i] };
+        var cords = { "XCP": xcx, "YCP": ycy, "xc": xcord[i], "yc": ycord[i], "order": i + 1, "message": str[i] };
         coordinates.push(cords);
     }
-   // var item = sendtoDB();
-    //var url = 'http://192.168.10.132:1337/addCoordinates';
-    //   console.log(item);
-    //    $.ajax({
-    //                crossDomain:"true",
-    //                type:"POST",
-    //                url: url,
-    //                data :  item,
-    //                cache: false,
-    //                timeout: 50000,
-    //                contentType :"application/json",
-    //                 success: function(response){ 
-    //                      console.log(response);
-    //                      checkDB = true;
-    //                },
-    //                 error: function(jqXHR, textStatus, errorThrown) {
-    //                        checkDB = false;
-    //                        console.log('error ' + textStatus + " " + errorThrown);
-    //                }
-    //        });
-              
-       document.getElementById("clear").disabled = true;
-       document.getElementById("anim").disabled=true;
-       ClearList();
+    finalCords.push({ "ImageID": imageID, "coordinates": coordinates });
+    coordinates = [];
+    //console.log(finalCords);
+    document.getElementById("clear").disabled = true;
+    document.getElementById("anim").disabled=true;
+    ClearList();
    	   
 }
 
@@ -87,43 +84,47 @@ function storeMessage(message, x, y, imageID) {
     
 }
 
-function getMousePos(evt) {
-    var offset = $("#darkbox").offset();
+/*function getMousePos(evt) {
     // get coordinates wrt canvas and screen
     return {
-        x: evt.pageX - offset.left,
-        y: evt.pageY - offset.top
+        x: evt.clientX,
+        y: evt.clientY 
     };
+}*/
+      
+/*function getCords(event) {
+    //get message from input for each coordinates
+    
+}
+function getMousePos(event) {
+   
+     var offset = $("#darkbox").offset();
+    console.log(event.ClientX + ",," + event.ClientY);
+    console.log(offset.top + "," + offset.left);
+    // get coordinates wrt canvas and screen
+    var x = event.ClientX - offset.left;
+    var y = event.ClientY - offset.top;
+    
+    var message = prompt("Enter tooltip text:");
+    if (message != null) {
+        if (message.length != 0) {
+            storeMessage(message, x,y, imageID);
+            document.getElementById("clear").disabled = false;
+            document.getElementById("anim").disabled = false;
+        }
+    }
    
 }
       
-var handler = function (evt) {
-    document.getElementById("EditScreen").style.zIndex = 999999;
-    document.getElementById("EditScreen").style.display ="block";
-    imageID = ImgListen.getAttribute("data-title");
-    //alert(imageID);
-    //get message from input for each coordinates
-     var mousePos = getMousePos(evt);
-     var message = prompt("Enter tooltip text:"); 
-     if(message!=null)
-     {
-        if(message.length != 0)
-        {
-            storeMessage(message,mousePos.x ,mousePos.y, imageID);
-            document.getElementById("clear").disabled=false;
-            document.getElementById("anim").disabled=false;
-        }  
-     }
-}
+//var handler = 
     
-
+    */
 
 function EditList(){
     // remove checked entry
   var boxes = document.getElementsByClassName('box');
   var texts = document.getElementsByClassName('text');
   var len = boxes.length;
-  console.log(len+","+boxcount);
     for(var i = 0; i<boxcount; i++){
          box = boxes[i];
          txt = texts[i];
@@ -163,7 +164,7 @@ function AnimateList()
           mark[i].style.textAlign = "center";
           mark[i].style.borderRadius = "50%";
 	      tips[i].style.top = (ycord[i])+'px';
-	      tips[i].style.left = (xcord[i]+15)+'px'; 
+	      tips[i].style.left = (xcord[i]+25)+'px'; 
 	      mark[i].style.top = (ycord[i])+'px';
           mark[i].style.left = (xcord[i]+5)+'px'; 
                     mark[i].innerHTML = i+1;
@@ -229,8 +230,8 @@ function ClearList()
 	    xcord.pop(); ycord.pop(); str.pop();
 	    imgs.pop();
 	}
-	count=0;
-	}
+	count = 0; 
+}
 
 
 

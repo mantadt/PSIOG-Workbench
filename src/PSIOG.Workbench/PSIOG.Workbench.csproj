@@ -68,8 +68,8 @@
   <ItemGroup>
     <Content Include="app\js\xmlToJSON.js" />
     <Content Include="app\scripts\directives\modal\fileUploadPopup.directive.js" />
-    <Content Include="app\scripts\directives\genAndView\genAndView.html" />
-    <Content Include="app\scripts\directives\genAndView\genAndView.js" />
+    <Content Include="app\scripts\directives\genAndView\genandview.html" />
+    <Content Include="app\scripts\directives\genAndView\genandview.js" />
     <Content Include="app\scripts\directives\generator\generator.html" />
     <Content Include="app\scripts\directives\generator\generator.js" />
     <Content Include="app\scripts\directives\modal\fileUploadPopup.html" />

@@ -1,5 +1,6 @@
+<script src="/scripts/ViewPresentation.js"></script>
+<script src="/scripts/directives/genAndView/genandview.js"></script>
 
-<script src="../../scripts/directives/genAndView/genAndView.js"></script>
 <div class="panel-body">
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
 
@@ -143,38 +144,16 @@
 
         </section>
 
-
-
-    </div>
-
-    <div id="myCarousel" class="carousel slide" ng-show="showcar">
-
-        <ol class="carousel-indicators" id="List"></ol>
-
-        <div class="carousel-inner" id="carousel-inner">
-            <!--   <div class="item active">
-                  <!-- Set the first background image using inline CSS below. -->
-            <!--     <div class="fill" style="background:lightblue"></div>
-                <div class="carousel-caption">
-                    <h2>Crewlink Flow</h2>
-                </div>
-            </div> -->
-
+        <div>
+            <button id="ShowHide" onclick="ShowHide()">Show Markers</button>
         </div>
 
+    </div>
 
-        <!-- Controls -->
-        <a class="left carousel-control" href="#myCarousel" data-slide="prev">
-            <span class="icon-prev"></span>
-        </a>
-        <a class="right carousel-control" href="#myCarousel" data-slide="next">
-            <span class="icon-next"></span>
-        </a>
+    <div id="myCarousel" >
 
     </div>
-    <div>
-        <button id="ShowHide" onclick="ShowHide()">Show / Hide Markers</button>
-    </div>
+    
 
 
 </div>
@@ -184,52 +163,12 @@
 <!--CSS-->
 
 <style>
-    #myCarousel {
-        color: #fff;
-        font: 14px/1.4 sans-serif;
-        position: fixed;
-        z-index: 9999; /*999999*/
-        top: 24px; /* since we cannot use padding */
-        left: 24px;
-        bottom: 24px;
-        right: 24px;
-        background: rgba(0,0,0, 0.8) none no-repeat 50% 50% / contain;
-        box-shadow: 0 0 0 24px rgba(0,0,0, 0.8);
-        -webkit-transition: 0.3s;
-        transition: 0.3s;
-        opacity: 0;
-        visibility: hidden;
-    }
-
-    .carousel,
-    .item,
-    .active {
-        height: 100%;
-    }
-
-    .carousel-inner {
-        height: 100%;
-    }
-
-    /* Background images are set within the HTML using inline CSS, not here */
-
-    .fill, .images {
-        width: 100%;
-        height: 100%;
-        background-position: center;
-        background-size: contain;
-    }
-
-    .carousel-control:focus, .carousel-control:hover {
-        width: 5%;
-    }
-
-    .carousel-control {
-        width: 5%;
-    }
+    
 
     #ShowHide {
         width: 150px;
+        z-index: 99999;
+        
         position: absolute;
         top: 95%;
         left: 89%;

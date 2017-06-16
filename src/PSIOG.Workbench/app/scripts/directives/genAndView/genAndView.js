@@ -13,7 +13,7 @@
 
 
 angular.module('sbAdminApp')
-    .directive('genandview', ['generatorService', function (generatorService, slideshowService) {
+    .directive('genandview', ['generatorService', 'slideshowService', function (generatorService, slideshowService) {
         return {
             templateUrl: 'scripts/directives/genAndView/genandview.html',
             //template : '<p>HELLO</p>',
@@ -36,6 +36,7 @@ angular.module('sbAdminApp')
                 var semioutp = [];
                 var backupArray = [];
                 var resultsData;
+                scope.showcar = false;
                 scope.clickedGenerate = function (flag) {
 
                     if (flag)
@@ -86,7 +87,7 @@ angular.module('sbAdminApp')
                             }, function (failure) { console.log(failure); });
                     }
                 }
-
+                
                 scope.clickedGenerateJSON = function (flag) {
 
                     if (flag)
@@ -295,7 +296,7 @@ angular.module('sbAdminApp')
                     //Displaying
                     var dataTable = [];
                     for (var i = 0; i < outputArray.length; i++) {
-                        
+
                         var teststmt = "";
                         var temparray = outputArray[i].split("_");
                         var tempStatement = "";
@@ -337,7 +338,7 @@ angular.module('sbAdminApp')
                     }
                     var imageData;
                     $(document).ready(function () {
-                        var table= $('#testCaseTable').DataTable({
+                        var table = $('#testCaseTable').DataTable({
                             data: dataTable,
                             select: true,
                             dom: 'Bfrtip',
@@ -347,52 +348,53 @@ angular.module('sbAdminApp')
                                     { title: 'Test Case', data: 'testcase' }
                             ]
                         });
-                        
+
                         $('#testCaseTable tbody').on('click', 'tr', function () {
                             var rowindex = table.row(this).index();
                             var blockId = testroutes[rowindex];
                             blockId = blockId.slice(0, blockId.length - 1);
                             var flowchartID = scope.itemSelected.flowChartID;
-                            console.log(flowchartID + ","+blockId);
+                            // console.log(flowchartID + ","+blockId);
                             slideshowService.getSlideshowJSON(flowchartID, blockId).
                                 then(function success(res) {
-                                    imageData = res.data;
+                                    //console.log(res);
+                                    imageData = res;
+                                    getMyData(imageData);
                                     loadImagesDir(imageData);
                                 }//,function errorCallback(response) {
                               //      console.log(response.statusText);
                                 );
 
                         });
-                       
+
 
                     });
+                }
+                    var divString = "";
                     function loadImagesDir(returnResult) {
                         var bool = false;
-                        divString = "";
-                        if (returnResult.assets && returnResult.assets.length > 0) {
-                            PNotify.removeAll();
+                       
+                        if (returnResult.coOrdinates && returnResult.coOrdinates.length > 0) {
+                           // PNotify.removeAll();
                             var accessToken = gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().access_token;
 
-                            for (var iLoop = 0; iLoop < returnResult.assets.length; iLoop++) {
-                                var values = returnResult.assets[iLoop];
-
-                                if (values.assetType.indexOf("image") >= 0 && (values.visited == null || typeof values.visited == "undefined" || !values.visited)) {
-                                    var vClass = "";
-
-                                    bool = true;
-                                    values.visited = true;
-                                    var fileId = values.assetURL;
-
+                            for (var iLoop = 0; iLoop < returnResult.coOrdinates.length; iLoop++) {
+                                var values = returnResult.coOrdinates[iLoop];
+                                var fileId = values.fileId;
+                               
                                     requestXHR("https://www.googleapis.com/drive/v3/files/" + fileId + '?alt=media', accessToken, iLoop);
                                 }
                             }
-                        }
+                        
                         else
                             notifyUSFailure();
+    
+                        
                     }
 
                     var xmlHttpReqQueue = new Array();
                     function requestXHR(url, accessToken, iLoop) {
+                        var vClass = "";
                         var xmlHttpReq;
                         var str = url;
                         var n = str.lastIndexOf("/");
@@ -410,13 +412,15 @@ angular.module('sbAdminApp')
                             if (xmlHttpReqQueue.length > 0)
                                 xmlHttpReqQueue[0].send(null);
                             else {
-                                jQuery('.divUnclear').remove();
-                                var el = angular.element("<div class='divUnclear' style='display:none'></div>");
+                               // jQuery('.divUnclear').remove();
+                                var el = angular.element("<div style='display:none'></div>");
                                 el.append(divString);
-                                $compile(el)(scope);
-                                element.append(el);
+                               // $compile(el)(scope);
+                                jQuery("#myCarousel").append(el);
                                 jQuery("img.imgFirstClick").click();
+                               
                             }
+                           
                         }
 
                         xmlHttpReq.open('GET', url, true);
@@ -479,9 +483,7 @@ angular.module('sbAdminApp')
                         }
 
                         return base64;
-                    }
-
-                    //  document.getElementById("numberofresults").innerHTML = "We generated " + outputArray.length + " test cases for you!\n";
+                   // }
 
 
                 }

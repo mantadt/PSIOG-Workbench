@@ -34,8 +34,8 @@
 
                             for (var kL = 0; kL < json[jL].assets.length; kL++) {
                                 if (json[jL].assets[kL].assetType.toString().toUpperCase().indexOf('IMAGE') >= 0) {
-                                    var file = { fileId: json[jL].assets[kL].fileID, coOrds: [] };
-                                    file.coOrds = fnGetCoordsForFileInBlock(json[jL].assets[kL].fileID, Number(blocks[iL]), coOrds);
+                                    var file = { fileId: json[jL].assets[kL].assetURL, coOrds: [] };
+                                    file.coOrds = fnGetCoordsForFileInBlock(json[jL].assets[kL].assetURL, Number(blocks[iL]), coOrds);
 
                                     result.coOrdinates.push(file);
                                 }

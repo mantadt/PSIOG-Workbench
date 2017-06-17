@@ -1,8 +1,8 @@
-﻿angular.module('sbAdminApp').service('slideshowService', function ($http, $q) {
+﻿angular.module('sbAdminApp').service('slideshowService', function ($http, $q, config) {
     this.getSlideshowJSON = function (flowchart, flow) {
         var one = $http({
             method: 'GET',
-            url: 'http://192.168.10.132:1337/getFlowChartByID/' + flowchart,
+            url: config.baseUrl + 'getFlowChartByID/' + flowchart,
             data: '',
             headers: {
                 'Content-Type': 'application/json; charset=utf-8'
@@ -11,7 +11,7 @@
 
         var two = $http({
             method: 'GET',
-            url: 'http://192.168.10.132:1337/getCoordbyFlowId/' + flowchart,
+            url: config.baseUrl + 'getCoordbyFlowId/' + flowchart,
             data: '',
             headers: {
                 'Content-Type': 'application/json; charset=utf-8'

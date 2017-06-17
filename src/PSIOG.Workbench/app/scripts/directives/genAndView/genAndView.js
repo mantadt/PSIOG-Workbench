@@ -12,7 +12,7 @@
 
 
 angular.module('sbAdminApp')
-    .directive('genAndView', ['generatorService', function (generatorService) {       
+    .directive('genAndView', ['generatorService', 'config', function (generatorService, config) {       
         return {
             templateUrl: 'views/ui-elements/ViewPresentations.html',
             //template : '<p>HELLO</p>',
@@ -296,7 +296,7 @@ angular.module('sbAdminApp')
                       var sendData =JSON.stringify({ flowchartID: flowchartID, BlockID: blockId });
                       $http({
                           method: 'POST',
-                          url: 'http://192.168.10.132:1337/getAllCoordinates',
+                          url: config.baseUrl + 'getAllCoordinates',
                           data: sendData,
                           headers: {
                               'Content-Type': 'application/json; charset=utf-8'

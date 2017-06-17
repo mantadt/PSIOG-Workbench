@@ -43,8 +43,8 @@ angular
                                     'scripts/directives/sidebar/sidebar.js',
                                     'scripts/directives/sidebar/sidebar-search/sidebar-search.js',
                                     'scripts/directives/flowchartdd.js',
-                                    'scripts/directives/genAndView/genAndView.js',
-                                    'scripts/directives/generator/generator.js',
+                                    'scripts/directives/genAndView/genandview.js',
+                                    'scripts/directives/generator/generator.js',     
                                     'scripts/slideshowplugin.js'
                                 ]
                             }),
@@ -97,7 +97,7 @@ angular
                                 'scripts/directives/notifications/notifications.js',
                                 'scripts/directives/chat/chat.js',
                                 'scripts/directives/generator/generator.js',
-                                'scripts/directives/genAndView/genAndView.js',
+                                'scripts/directives/genAndView/genandview.js',
                                 'scripts/directives/dashboard/stats/stats.js'
                             ]
                         })

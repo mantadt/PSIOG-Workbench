@@ -187,6 +187,16 @@
 
 
                 function OpenPopup(obj) {
+
+                   jQuery('ul.tabs li').click(function () {
+                       var tab_id = jQuery(this).attr('data-toggle');
+
+                        jQuery('ul.tabs li').removeClass('current');
+                        jQuery('.tab-content').removeClass('current');
+
+                        jQuery(this).addClass('current');
+                        jQuery(tab_id).addClass('current');
+                    })
                     document.getElementById("imageLoader").style.display = "none";
 
                     // createWindowWithHtml();
@@ -717,30 +727,35 @@
 
         $scope.saveUsability = function () {
             flowchartID = $scope.itemSelected.flowChartID;
-            blockID = $scope.blkid;
-            var item = { "flowchartID": flowchartID, "blockID": blockID, "coordinates": coordinates };
-            var data = angular.toJson(item, true)
+            blockID = $scope.blkid; 
+            var imageCount = finalCords.length;
+           
+            for(var i =0; i<imageCount ; i++)
+            {
+                var item = { "flowchartID": flowchartID, "blockID": blockID, "FileID" : finalCords[i].ImageID, "coordinates":  finalCords[i].coordinates};
+                var data  = angular.toJson(item, true);
+                var url = config.baseUrl + 'addCoordinates';
+               // console.log("post");
+                console.log(JSON.stringify(data));
+                $.ajax({
+                    crossDomain:"true",
+                    type:"POST",
+                    url: url,
+                    data :  data,
+                    cache: false,
+                    timeout: 50000,
+                    contentType :"application/json",
+                    success: function(response){ 
+                        console.log(response);
+                   
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                    
+                        console.log('error ' + textStatus + " " + errorThrown);
+                    }
+                });
+            }
 
-
-            var url = config.baseUrl + 'addCoordinates';
-            // console.log(item);
-            $.ajax({
-                crossDomain: "true",
-                type: "POST",
-                url: url,
-                data: data,
-                cache: false,
-                timeout: 50000,
-                contentType: "application/json",
-                success: function (response) {
-                    console.log(response);
-
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-
-                    console.log('error ' + textStatus + " " + errorThrown);
-                }
-            });
             document.getElementById("EditScreen").style.zIndex = 0;
             document.getElementById("EditScreen").style.display = "none";
         }

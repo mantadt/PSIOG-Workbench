@@ -23,7 +23,6 @@
             var coOrds = ret[1].data.Coordinates;
             var blocks = flow.split('_');
             var result = { coOrdinates: [] };
-
             for (var iL = 0; iL < blocks.length; iL++) {
                 for (var jL = 0; jL < json.length; jL++) {
                     if (Number(blocks[iL]) == json[jL].key) {
@@ -34,9 +33,9 @@
 
                             for (var kL = 0; kL < json[jL].assets.length; kL++) {
                                 if (json[jL].assets[kL].assetType.toString().toUpperCase().indexOf('IMAGE') >= 0) {
-                                    var file = { fileId: json[jL].assets[kL].fileID, coOrds: [] };
-                                    file.coOrds = fnGetCoordsForFileInBlock(json[jL].assets[kL].fileID, Number(blocks[iL]), coOrds);
-
+                                    var file = { fileId: json[jL].assets[kL].assetURL, coOrds: [] };
+                                    file.coOrds = fnGetCoordsForFileInBlock(json[jL].assets[kL].assetURL, Number(blocks[iL]), coOrds);
+                                    
                                     result.coOrdinates.push(file);
                                 }
                             }
@@ -54,11 +53,11 @@
 
     function fnGetCoordsForFileInBlock(fileId, blockId, json) {
         var result = [];
-
+       
         for (var mL = 0; mL < json.length; mL++) {
-            if (blockId == json[mL].blockId && fileId == json[mL].FileID) {
+              if (blockId == json[mL].blockID && fileId == json[mL].FileID) {
                 result = json[mL].coordinates;
-                break;
+                 break;
             }
         }
 

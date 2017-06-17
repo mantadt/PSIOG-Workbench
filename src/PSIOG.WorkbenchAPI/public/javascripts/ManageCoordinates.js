@@ -21,6 +21,12 @@ exports.addCoordinates = function (req, res) {
     // Connect to the db
     MongoClient.connect(url, function (err, db) {
         if (!err) {
+
+            var flowchartID = req.body.flowchartID;
+            var blockID = req.body.blockID;
+            var FileID = req.body.FileID;
+            db.collection('Coordinates').remove({ "flowchartID": flowchartID, "blockID": Number(blockID), "FileID": FileID });
+
             var collection = db.collection("Coordinates");
             var body = req.body;
             collection.insert(body);

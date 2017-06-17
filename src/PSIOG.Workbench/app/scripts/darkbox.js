@@ -57,8 +57,10 @@
           $cur = $imagesGroup.eq(c),
           description = $cur.data("darkbox-description"),
           src = $cur.data("darkbox");
+        $darkbox.addClass("myID");
          $darkbox.attr("data-title", description);
-      $darkbox.addClass("show spinner");
+         $darkbox.addClass("show spinner");
+         $darkbox.attr("myID", c);
      // $darkboxDescription.html(description);
       $darkboxStats.html(n < 2 ? "" : (c+1) +"/"+ n);
 

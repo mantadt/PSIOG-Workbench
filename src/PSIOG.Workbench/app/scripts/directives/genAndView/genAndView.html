@@ -1,157 +1,183 @@
+<script src="/scripts/ViewPresentation.js"></script>
+<script src="/scripts/directives/genAndView/genandview.js"></script>
+
 <div class="panel-body">
-    <iv class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-       
-                <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
-                    
-                    <div id="pastexml" ng-show="pastexml">
-                       
-                            <div style="float:right">
-                                <label class="switch">
-                                    <input type="checkbox" ng-click="toggleJsonXml()">
-                                    <div class="slider round"></div>
-                                </label>
-                            </div>
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
 
-                            <div style="float:left">
-                                <div class="mdl-card__supporting-text mdl-grid mdl-grid--no-spacing" ng-show="!jsonxmltoggle">
-                                    <h4 class="mdl-cell mdl-cell--12-col">Paste the XML content</h4>
+        <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
 
-                                    <div class="section__text mdl-cell mdl-cell--10-col-desktop mdl-cell--6-col-tablet mdl-cell--3-col-phone">
-                                        <textarea ng-model="xmlpaste" rows="6" cols="100"></textarea>
-                                        <br />
-                                        <!--<div>
-                        <h5>Pick a file from Google Drive</h5>
+            <div id="pastexml" ng-show="pastexml">
 
-                        <button id="authorize-button" style="display: none;">Authorize</button>
-                        <button id="signout-button" style="display: none;">Sign Out</button>
+                <div style="float:right">
+                    <label class="switch">
+                        <input type="checkbox" ng-click="toggleJsonXml()">
+                        <div class="slider round"></div>
+                    </label>
+                </div>
 
-                        <pre id="content"></pre>
+                <div style="float:left">
+                    <div class="mdl-card__supporting-text mdl-grid mdl-grid--no-spacing" ng-show="!jsonxmltoggle">
+                        <h4 class="mdl-cell mdl-cell--12-col">Paste the XML content</h4>
 
-
-                    </div>-->
-                                    </div>
-                                    <div>
-                                        <button id="generatebuttonJSON" class="mdl-button" style="color:black" ng-click="clickedGenerateJSON(false)">Click to Generate Test Cases</button>
-                                    </div>
-
-
-                                </div>
-                            
-
-                            <div class="mdl-card__supporting-text mdl-grid mdl-grid--no-spacing" ng-show="jsonxmltoggle">
-                                <h4 class="mdl-cell mdl-cell--12-col">Pick the JSON file!</h4>
-
-                                <div class="section__text mdl-cell mdl-cell--10-col-desktop mdl-cell--6-col-tablet mdl-cell--3-col-phone">
-                                    <select id="jsonpicker" ng-model="jsonpicker" ng-options="file for file in jsonfiles"> {{file}}</select>
-
-                                    <br />
-                                    <br /><br />
-                                    <!--<div>
-                    <h5>Pick a file from Google Drive</h5>
-
-                    <button id="authorize-button" style="display: none;">Authorize</button>
-                    <button id="signout-button" style="display: none;">Sign Out</button>
-
-                    <pre id="content"></pre>
-
-
-                </div>-->
-                                </div>
-                                <div>
-                                    <button id="generatebutton" class="mdl-button" style="color:black" ng-click="clickedGenerate(false)">Click to Generate Test Cases</button>
-                                </div>
-
-
-                            </div>
-
+                        <div class="section__text mdl-cell mdl-cell--10-col-desktop mdl-cell--6-col-tablet mdl-cell--3-col-phone">
+                            <textarea ng-model="xmlpaste" rows="6" cols="100"></textarea>
+                            <br />
                         </div>
-
-                       
-                    </div>
-
-                        
-                   
-                    
-                    <div class="mdl-card mdl-cell mdl-cell--12-col" id="loader" ng-show="loader" >
-                        <div class="mdl-card__supporting-text mdl-grid mdl-grid--no-spacing">
-                            <h4 class="mdl-cell mdl-cell--12-col">Generating Test Cases..</h4>
-
-                            <div class="section__text mdl-cell mdl-cell--10-col-desktop mdl-cell--6-col-tablet mdl-cell--3-col-phone">
-
-                                <img style="height:150px; margin-left:35%" src="https://d13yacurqjgara.cloudfront.net/users/82092/screenshots/1073359/spinner.gif" />
-
-                            </div>
+                        <div>
+                            <button id="generatebutton" class="mdl-button" style="color:black" ng-click="clickedGenerate(false)">Click to Generate Test Cases</button>
                         </div>
 
 
                     </div>
 
 
-                    <div class="mdl-card mdl-cell mdl-cell--12-col" ng-show="results" >
-                        <div class="mdl-card__supporting-text mdl-grid mdl-grid--no-spacing">
-                            <h3 class="mdl-cell mdl-cell--12-col">Results</h3>
+                    <div class="mdl-card__supporting-text mdl-grid mdl-grid--no-spacing" ng-show="jsonxmltoggle">
+                        <h4 class="mdl-cell mdl-cell--12-col">Pick the JSON file!</h4>
 
-                            <div class="section__text mdl-cell mdl-cell--10-col-desktop mdl-cell--6-col-tablet mdl-cell--3-col-phone">
+                        <div class="section__text mdl-cell mdl-cell--10-col-desktop mdl-cell--6-col-tablet mdl-cell--3-col-phone">
+                            <!--<select id="jsonpicker" ng-model="jsonpicker" ng-options="file for file in jsonfiles"> {{file}}</select>-->
+                            <flowchartddl></flowchartddl>
 
-                                <div>
-                                    <div style="width:50%">
-                                        <h4 id="numberofresults"></h4>
-                                    </div>
-                                    <!-- <div class="mdl-card__actions" style="background-color:#9CCC65; width:25%">
-                                     <button class="mdl-button">
-                                     Export .csv!
-                                     </button>
-                                    </div> -->
+                            <br />
+                            <br /><br />
+                            <!--<div>
+                                <h5>Pick a file from Google Drive</h5>
 
-                                    <div style="background-color:lightgrey ">
-                                        Select the starting node
+                                <button id="authorize-button" style="display: none;">Authorize</button>
+                                <button id="signout-button" style="display: none;">Sign Out</button>
 
-                                        <select id="startNode" ng-model="startNode" ng-change="nodeList()"></select>
-
-                                        Select the ending node
-                                        <select id="endNode" ng-model="endNode" ng-change="nodeList()"></select>
+                                <pre id="content"></pre>
 
 
-                                        <button id="resetFilters" class="mdl-button" ng-click="clickedGenerate(true)">
-                                            Reset filters
-                                        </button>
-                                    </div>
+                            </div>-->
+                        </div>
+                        <div>
+                            <button id="generatebutton" class="mdl-button" style="color:black" ng-click="clickedGenerateJSON(false)">Click to Generate Test Cases</button>
+                        </div>
 
 
-                                </div>
-                                <br />
-                                <!-- <details>
-                                  <summary><p>View here</p></summary>
-                                  <p><ul id="testcases"></ul></p>
-                                </details> -->
-                                <table id="testCaseTable" class="display" width="100%"></table>
-                                <p><ul id="testcases"></ul></p>
+                    </div>
+
+                </div>
+
+
+            </div>
 
 
 
 
+            <div class="mdl-card mdl-cell mdl-cell--12-col" id="loader" ng-show="loader">
+                <div class="mdl-card__supporting-text mdl-grid mdl-grid--no-spacing">
+                    <h4 class="mdl-cell mdl-cell--12-col">Generating Test Cases..</h4>
+
+                    <div class="section__text mdl-cell mdl-cell--10-col-desktop mdl-cell--6-col-tablet mdl-cell--3-col-phone">
+
+                        <img style="height:150px; margin-left:35%" src="https://d13yacurqjgara.cloudfront.net/users/82092/screenshots/1073359/spinner.gif" />
+
+                    </div>
+                </div>
+
+
+            </div>
+
+
+            <div class="mdl-card mdl-cell mdl-cell--12-col" ng-show="results">
+                <div class="mdl-card__supporting-text mdl-grid mdl-grid--no-spacing">
+                    <div>
+
+                        <h3>Results</h3>
+
+                        <div ng-click="goBack()" style="float:right">
+                            Close
+                        </div>
+                    </div>
+
+                    <div class="section__text mdl-cell mdl-cell--10-col-desktop mdl-cell--6-col-tablet mdl-cell--3-col-phone">
+
+                        <div>
+                            <div style="width:50%">
+                                <h4 id="numberofresults"></h4>
                             </div>
-                            <br>
-                            <!-- <div class="mdl-card__actions" style="background-color:#9CCC65" >
-                              <button id="back" class="mdl-button" style="color:black" onclick="goBack()"><a href="#generator">Back</a>
-                              </button>
+                            <!-- <div class="mdl-card__actions" style="background-color:#9CCC65; width:25%">
+                             <button class="mdl-button">
+                             Export .csv!
+                             </button>
                             </div> -->
+
+                            <div style="background-color:lightgrey ">
+                                Select the starting node
+
+                                <select id="startNode" ng-model="startNode" ng-change="nodeList()"></select>
+
+                                Select the ending node
+                                <select id="endNode" ng-model="endNode" ng-change="nodeList()"></select>
+
+
+                                <button id="resetFilters" class="mdl-button" ng-click="clickedGenerate(true)">
+                                    Reset filters
+                                </button>
+                            </div>
+
+
                         </div>
+                        <br />
+                        <!-- <details>
+                          <summary><p>View here</p></summary>
+                          <p><ul id="testcases"></ul></p>
+                        </details> -->
+                        <table id="testCaseTable" class="display" width="100%"></table>
+                        <p><ul id="testcases"></ul></p>
+
+
 
 
                     </div>
-                    
-                </section>
+                    <br>
+                    <!-- <div class="mdl-card__actions" style="background-color:#9CCC65" >
+                      <button id="back" class="mdl-button" style="color:black" onclick="goBack()"><a href="#generator">Back</a>
+                      </button>
+                    </div> -->
+                </div>
 
 
+            </div>
+
+        </section>
+
+        <div>
+            <button id="ShowHide" onclick="ShowHide()">Show Markers</button>
+        </div>
 
     </div>
+
+    <div id="myCarousel" >
+
+    </div>
+    
+
+
 </div>
+
 
 
 <!--CSS-->
 
 <style>
+    
+
+    #ShowHide {
+        width: 150px;
+        z-index: 99999;
+        
+        position: absolute;
+        top: 95%;
+        left: 89%;
+        height: 25px;
+        background-color: black;
+        color: white;
+        border-radius: 4px;
+    }
+
     .switch {
         position: relative;
         display: inline-block;
@@ -209,8 +235,8 @@
         .slider.round:before {
             border-radius: 50%;
         }
+
     .wrap {
         width: 85%;
     }
-
 </style>

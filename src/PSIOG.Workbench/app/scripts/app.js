@@ -192,7 +192,7 @@ angular
 
 //Service to Generate all combinations of flows
 angular
-    .module('sbAdminApp').factory('generatorService', 'config', ['$http', 'config', function ($http, config) {
+    .module('sbAdminApp').factory('generatorService', ['$http', 'config', function ($http, config) {
         var data = { name: 'MS' };
         
         return {

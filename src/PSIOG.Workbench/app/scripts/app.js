@@ -204,7 +204,7 @@ angular
             },
 
             generateFromJson: function (jsonData) {
-                //var formData = new FormData();
+                //var formData = new FormData(); 
                 //formData.append("flowChartID", id);
                 return $http.post(config.baseUrl + "generateFromJson/", jsonData, { headers: { 'Content-Type': 'application/json' } });
             },

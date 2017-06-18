@@ -1,5 +1,5 @@
 <script src="/scripts/ViewPresentation.js"></script>
-<script src="/scripts/directives/genAndView/genandview.js"></script>
+<!--<script src="/scripts/directives/genAndView/genandview.js"></script>-->
 
 <div class="panel-body">
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
@@ -24,7 +24,7 @@
                             <br />
                         </div>
                         <div>
-                            <button id="generatebutton" class="mdl-button" style="color:black" ng-click="clickedGenerate(false)">Click to Generate Test Cases</button>
+                            <button id="generatebutton" class="btn btn-primary" ng-click="clickedGenerate(false)">Click to Generate Test Cases</button>
                         </div>
 
 
@@ -52,7 +52,7 @@
                             </div>-->
                         </div>
                         <div>
-                            <button id="generatebutton" class="mdl-button" style="color:black" ng-click="clickedGenerateJSON(false)">Click to Generate Test Cases</button>
+                            <button id="generatebutton" class="btn btn-primary" ng-click="clickedGenerateJSON(false)">Click to Generate Test Cases</button>
                         </div>
 
 
@@ -87,8 +87,8 @@
 
                         <h3>Results</h3>
 
-                        <div ng-click="goBack()" style="float:right">
-                            Close
+                        <div style="float:right;cursor:pointer;padding:5px 5px 5px 5px;">
+                            <button ng-click="goBack()" class="btn btn-warning">Close</button>
                         </div>
                     </div>
 
@@ -104,16 +104,16 @@
                              </button>
                             </div> -->
 
-                            <div style="background-color:lightgrey ">
+                            <div style="background-color:lightgrey;padding:5px 5px 5px 5px; ">
                                 Select the starting node
 
-                                <select id="startNode" ng-model="startNode" ng-change="nodeList()"></select>
+                                <select id="startNode" ng-model="startNode" ng-change="nodeList()" style="width:200px;"></select>
 
                                 Select the ending node
-                                <select id="endNode" ng-model="endNode" ng-change="nodeList()"></select>
+                                <select id="endNode" ng-model="endNode" ng-change="nodeList()" style="width:200px"></select>
 
-
-                                <button id="resetFilters" class="mdl-button" ng-click="clickedGenerate(true)">
+                                <span style="width:10px">&nbsp;</span>
+                                <button id="resetFilters" class="btn btn-primary" ng-click="clickedGenerate(true)">
                                     Reset filters
                                 </button>
                             </div>
@@ -129,7 +129,7 @@
                         <p><ul id="testcases"></ul></p>
 
 
-
+                        <button id="genPresentation" class="btn btn-primary" ng-click="generatePresentation()">View Presentation</button>
 
                     </div>
                     <br>
@@ -144,16 +144,16 @@
 
         </section>
 
-        <div>
+        <!--<div>
             <button id="ShowHide" onclick="ShowHide()">Show Markers</button>
-        </div>
+        </div>-->
 
     </div>
 
-    <div id="myCarousel" >
+    <div id="myCarousel">
 
     </div>
-    
+
 
 
 </div>
@@ -163,12 +163,9 @@
 <!--CSS-->
 
 <style>
-    
-
     #ShowHide {
         width: 150px;
         z-index: 99999;
-        
         position: absolute;
         top: 95%;
         left: 89%;

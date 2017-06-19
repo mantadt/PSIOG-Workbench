@@ -29,6 +29,7 @@
                 on: {
                     "touchstart mousedown": function (e) {
                         e.preventDefault();
+                        e.stopPropagation();
                         $darkbox.removeClass("show");
                     }
                 }

@@ -16,7 +16,7 @@ angular
         'angular-loading-bar',
     ])
     .value('config', {       
-        baseUrl:'http://192.168.10.132:1337/
+        baseUrl:'http://192.168.10.132:1337/'
         //baseUrl: 'http://localhost:1337/'
     })
     .config(['$stateProvider', '$urlRouterProvider', '$ocLazyLoadProvider', function ($stateProvider, $urlRouterProvider, $ocLazyLoadProvider) {

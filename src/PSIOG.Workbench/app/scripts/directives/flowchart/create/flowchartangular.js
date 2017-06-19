@@ -50,6 +50,8 @@
                     var flowchartId = scope.$parent.itemSelected.flowChartID;
                     var imagesC = [];
 
+                    jQuery.blockUI();
+
                     scope.blkid = val.key;
 
                     $http({
@@ -92,7 +94,11 @@
                         }
                     }
                     else
+                    {
+                        jQuery.unblockUI();
                         notifyUSFailure();
+                    }
+                      
                 }
 
                 var xmlHttpReqQueue = new Array();
@@ -120,6 +126,7 @@
                             $compile(el)(scope);
                             element.append(el);
                             jQuery("img.imgFirstClick").click();
+                            jQuery.unblockUI();
                         }
                     }
 

@@ -421,8 +421,10 @@ angular.module('sbAdminApp')
                             requestXHR("https://www.googleapis.com/drive/v3/files/" + fileId + '?alt=media', accessToken, iLoop);
                         }
                     }
-                    else
+                    else {
+                        jQuery.unblockUI();
                         alert('No usability images found!');
+                    }
 
 
                 }

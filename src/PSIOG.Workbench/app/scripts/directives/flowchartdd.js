@@ -1,13 +1,13 @@
 ﻿angular.module('sbAdminApp')
-    .directive('flowchartddl', function ($http) {
+    .directive('flowchartddl', function ($http, config) {
         return {
             restrict: 'E',
             scope: false,
             template: '<select ng-model="itemSelected" ng-class="selectpicker" ng-options="item as item.flowchartName for item in items track by item.flowChartID"></select>',
-            link: function (scope, elem, attr) {
+            link: function (scope, elem, attr) {               
                 $http({
                     method: 'GET',
-                    url: 'http://192.168.10.132:1337/getAllFlowChartNames',
+                    url: config.baseUrl + 'getAllFlowChartNames',
                     data: {},
                     headers: {
                         'Content-Type': 'application/json; charset=utf-8'

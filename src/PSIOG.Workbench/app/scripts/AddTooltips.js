@@ -14,6 +14,7 @@ var finalCords = [];
 
 
 $(document).ready(function () {
+
        ImgListen.addEventListener('mousedown', handleClick);
 });
 
@@ -143,8 +144,15 @@ function EditList(){
 
 function AnimateList()
 {	//  Add tooltips to screen
+    $("div.oldMarksVPS").tooltip('destroy');
+    $("div.oldMarksVPS").remove();
+    var guid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+
     var y= []; var z=[];
-	for(var i =0; i<count;i++)
+	/*for(var i =0; i<count;i++)
     {
 	      tips[i]=  document.createElement('div');
           mark[i]=  document.createElement('div');
@@ -176,13 +184,37 @@ function AnimateList()
         //  document.getElementsByTagName('body')[0].appendChild(mark[i]);
           mark[i].onmouseout  = function() {  mouseOut(event);}
           mark[i].onmouseover = function() { mouseOver(event);}
+    }*/
+    for (var j =0; j<count;j++) {
+        mark[j] = document.createElement('div');
+        mark[j].id = 'mark' + j;
+        mark[j].style.position = 'absolute';
+        mark[j].style.width = '15px';
+        mark[j].style.border = '1px solid black';
+        mark[j].style.color = 'black';
+        mark[j].style.background = "lawngreen";
+        mark[j].style.textAlign = "center";
+        mark[j].style.borderRadius = "50%";
+        mark[j].style.top = (ycord[j]) + 'px';
+        mark[j].style.left = (xcord[j] + 5) + 'px';
+        mark[j].innerHTML = j + 1;
+        mark[j].dataToggle = 'tooltip';
+        mark[j].title = str[j];
+        mark[j].className = 'oldMarksVPS c' + guid;
+        document.getElementById("darkbox").appendChild(mark[j]);
     }
-   
+    
+    $("div.oldMarksVPS").tooltip({ delay: { hide: 2000 }, placement: 'right' });
+    $("div.oldMarksVPS").tooltip('show');
+    setTimeout(function () { $("div.oldMarksVPS.c" + guid).tooltip('hide') }, 2000);
+
+    setTimeout(RemoveAnimate, 10000);
    document.getElementById("anim").disabled=true;   
    
-   setTimeout(RemoveAnimate, 4000); 
 }
-function mouseOut(event){
+
+
+/*function mouseOut(event){
     var id1 = event.currentTarget.id;
    var id2 = "tip"+id1.substring(4);
    
@@ -199,18 +231,21 @@ function mouseOver(event){
     {
          document.getElementById(id2).style.display = "block";
     }
-}
+}*/
 
 function RemoveAnimate()
 {	//  Remove tooltips added	
+    $("div.oldMarksVPS").tooltip('destroy');
+    $("div.oldMarksVPS").remove();
 	for(var i =0; i<count;i++)
     {
-	      var id1 = "tip"+i;
+	    //  var id1 = "tip"+i;
           var id2 = "mark"+i;
-          if(id1 !=null && id2 !=null)
+	    //  if(id1 !=null && id2 !=null)
+	      if(id2 !=null)
           {
-              var op1= document.getElementById(id1);
-              op1.parentNode.removeChild(op1);
+           //   var op1= document.getElementById(id1);
+           //   op1.parentNode.removeChild(op1);
               var op2= document.getElementById(id2);
               op2.parentNode.removeChild(op2);
           }

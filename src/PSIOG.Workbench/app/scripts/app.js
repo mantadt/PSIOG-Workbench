@@ -15,6 +15,10 @@ angular
         'ui.bootstrap',
         'angular-loading-bar',
     ])
+    .value('config', {       
+        baseUrl:'http://192.168.10.132:1337/'
+        //baseUrl: 'http://localhost:1337/'
+    })
     .config(['$stateProvider', '$urlRouterProvider', '$ocLazyLoadProvider', function ($stateProvider, $urlRouterProvider, $ocLazyLoadProvider) {
 
         $ocLazyLoadProvider.config({
@@ -37,12 +41,11 @@ angular
                                     'scripts/directives/header/header.js',
                                     'scripts/directives/header/header-notification/header-notification.js',
                                     'scripts/directives/sidebar/sidebar.js',
-                                    'scripts/directives/sidebar/sidebar-search/sidebar-search.js',                                    
+                                    'scripts/directives/sidebar/sidebar-search/sidebar-search.js',
                                     'scripts/directives/flowchartdd.js',
                                     'scripts/directives/genAndView/genandview.js',
-                                    'scripts/directives/generator/generator.js',                                                                    
+                                    'scripts/directives/generator/generator.js',     
                                     'scripts/slideshowplugin.js'
-
                                 ]
                             }),
                             $ocLazyLoad.load(
@@ -149,7 +152,7 @@ angular
                 templateUrl: 'views/ui-elements/ViewFlowChart.html',
                 url: '/ViewFlowChart'
             })
-              .state('dashboard.ModifyFlowChart', {
+            .state('dashboard.ModifyFlowChart', {
                 templateUrl: 'views/ui-elements/ModifyFlowChart.html',
                 url: '/ModifyFlowChart'
             })
@@ -189,30 +192,31 @@ angular
 
 //Service to Generate all combinations of flows
 angular
-    .module('sbAdminApp').factory('generatorService', ['$http', function ($http) {
-    var data = { name: 'MS' };
-    var urlBase = 'http://192.168.10.132:1337/';
-    return {
-        generateFromXml: function (xmlData) {
-            var formData = new FormData();
-            //formData.append("xmlData", "DSDS");
-            //console.log(xmlData, formData.getAll('xmlData'));
-            return $http.post(urlBase + "generateFromXml/", $.param({ 'xmlData': xmlData }), { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
-        },
+    .module('sbAdminApp').factory('generatorService', ['$http', 'config', function ($http, config) {
+        var data = { name: 'MS' };
+        
+        return {
+            generateFromXml: function (xmlData) {
+                var formData = new FormData();
+                //formData.append("xmlData", "DSDS");
+                //console.log(xmlData, formData.getAll('xmlData'));
+                return $http.post(config.baseUrl + "generateFromXml/", $.param({ 'xmlData': xmlData }), { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
+            },
 
-        generateFromJson: function (jsonData) {
-            //var formData = new FormData();
-            //formData.append("flowChartID", id);
-            return $http.post(urlBase + "generateFromJson/", jsonData, { headers: { 'Content-Type': 'application/json' } });
-        },
+            generateFromJson: function (jsonData) {
+                //var formData = new FormData(); 
+                //formData.append("flowChartID", id);
+                return $http.post(config.baseUrl + "generateFromJson/", jsonData, { headers: { 'Content-Type': 'application/json' } });
+            },
 
-        getJsonValue: function (id) {
-            return $http.get(urlBase + "getFlowChartByID/" + id, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
+            getJsonValue: function (id) {
+                return $http.get(config.baseUrl + "getFlowChartByID/" + id, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
+            }
+
+
         }
+    }]);
 
-
-    }
-}]);
 
 
 

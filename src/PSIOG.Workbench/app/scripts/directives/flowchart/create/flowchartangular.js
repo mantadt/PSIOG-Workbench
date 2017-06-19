@@ -1,10 +1,10 @@
 ﻿angular.module('sbAdminApp')
-    .directive('goDiagram', function ($http, $compile) {
+    .directive('goDiagram', function ($http, $compile, config) {
         return {
             restrict: 'E',
             template: '<div></div>',  // just an empty DIV element
             replace: true,
-            scope: { model: '=goModel', op: '@', blkid : '=blockId' },
+            scope: { model: '=goModel', op: '@', blkid: '=blockId' },
             link: function (scope, element, attrs) {
 
                 var $ = go.GraphObject.make;  // for conciseness in defining templates
@@ -49,12 +49,14 @@
                     var blockId = val.key;
                     var flowchartId = scope.$parent.itemSelected.flowChartID;
                     var imagesC = [];
-                   
+
+                    jQuery.blockUI();
+
                     scope.blkid = val.key;
 
                     $http({
                         method: 'GET',
-                        url: 'http://192.168.10.132:1337/getFlowChartByFlowIdBlockId/' + flowchartId + '/' + blockId,
+                        url: config.baseUrl + 'getFlowChartByFlowIdBlockId/' + flowchartId + '/' + blockId,
                         data: {},
                         headers: {
                             'Content-Type': 'application/json; charset=utf-8'
@@ -92,16 +94,20 @@
                         }
                     }
                     else
+                    {
+                        jQuery.unblockUI();
                         notifyUSFailure();
+                    }
+                      
                 }
 
                 var xmlHttpReqQueue = new Array();
                 function requestXHR(url, accessToken, iLoop) {
                     var xmlHttpReq;
-                    var str=url;
+                    var str = url;
                     var n = str.lastIndexOf("/");
                     var m = str.indexOf("?");
-                    var fileId= str.substring(n+1,m);
+                    var fileId = str.substring(n + 1, m);
                     xmlHttpReq = new XMLHttpRequest()
                     xmlHttpReq.onload = function () {
                         xmlHttpReqQueue.shift();
@@ -109,8 +115,8 @@
                         var base64 = 'data:image/png;base64,' + base64ArrayBufferDir(xmlHttpReq.response);
                         if (iLoop == 0)
                             vClass = "class='imgFirstClick'";
-                        
-                        divString += " <div><img height='50' " + vClass + " width='50' src='" + base64 + "' data-darkbox='" + base64 + "' data-darkbox-group='one'"+" data-darkbox-description='" +fileId +"'></div>";
+
+                        divString += " <div><img height='50' " + vClass + " width='50' src='" + base64 + "' data-darkbox='" + base64 + "' data-darkbox-group='one'" + " data-darkbox-description='" + fileId + "'></div>";
                         if (xmlHttpReqQueue.length > 0)
                             xmlHttpReqQueue[0].send(null);
                         else {
@@ -120,6 +126,7 @@
                             $compile(el)(scope);
                             element.append(el);
                             jQuery("img.imgFirstClick").click();
+                            jQuery.unblockUI();
                         }
                     }
 
@@ -702,7 +709,7 @@
             }
         }
     })
-    .controller('MinimalCtrl', function ($scope, $rootScope, $http, slideshowService) {
+    .controller('MinimalCtrl', function ($scope, $rootScope, $http, slideshowService, config) {
         $scope.model = new go.GraphLinksModel(
             [
                 { "category": "Start", "text": "Start", "key": -1, "loc": "-317 -502" },
@@ -725,7 +732,7 @@
             });
         }
 
-        $scope.saveUsability = function(){
+        $scope.saveUsability = function () {
             flowchartID = $scope.itemSelected.flowChartID;
             blockID = $scope.blkid; 
             var imageCount = finalCords.length;
@@ -734,7 +741,7 @@
             {
                 var item = { "flowchartID": flowchartID, "blockID": blockID, "FileID" : finalCords[i].ImageID, "coordinates":  finalCords[i].coordinates};
                 var data  = angular.toJson(item, true);
-                var url = 'http://192.168.10.132:1337/addCoordinates';
+                var url = config.baseUrl + 'addCoordinates';
                // console.log("post");
                 console.log(JSON.stringify(data));
                 $.ajax({
@@ -755,13 +762,9 @@
                     }
                 });
             }
-            
-           
-            
-            
-           
+
             document.getElementById("EditScreen").style.zIndex = 0;
-            document.getElementById("EditScreen").style.display ="none";
+            document.getElementById("EditScreen").style.display = "none";
         }
 
         $scope.model.selectedNodeData = null;
@@ -777,7 +780,7 @@
 
             $http({
                 method: 'POST',
-                url: 'http://192.168.10.132:1337/addFlowchart',
+                url: config.baseUrl + 'addFlowchart',
                 data: data,
                 headers: {
                     'Content-Type': 'application/json; charset=utf-8'
@@ -800,7 +803,7 @@
 
             $http({
                 method: 'POST',
-                url: 'http://192.168.10.132:1337/updateFlowchartByID',
+                url: config.baseUrl + 'updateFlowchartByID',
                 data: data,
                 headers: {
                     'Content-Type': 'application/json; charset=utf-8'
@@ -817,7 +820,7 @@
 
 
         $scope.UploadFile = function () {
-            
+
             insertFile(document.getElementById("fileUpload").files[0], function (response) {
                 var fileUnID = GUID();
                 GUID.register(fileUnID);
@@ -872,7 +875,7 @@
 
                 $http({
                     method: 'GET',
-                    url: 'http://192.168.10.132:1337/getFlowChartByID/' + floID,
+                    url: config.baseUrl + 'getFlowChartByID/' + floID,
                     data: '',
                     headers: {
                         'Content-Type': 'application/json; charset=utf-8'
@@ -888,7 +891,7 @@
 
         }
         $scope.updateJSONData = function () {
-            
+
             var indexOrder = [];
             $('#ListView div ').each(function (i) {
                 var eachdivindex = $(this).index();
@@ -901,7 +904,7 @@
         }
         $scope.funcMergeJson = function (fileorders) {
             var jsonData = $scope.model.toJson();
-            
+
             var data = JSON.parse(jsonData);
             var orderData = JSON.parse(fileorders);
             //var Count = Object.keys(fileorders).length;
@@ -1176,7 +1179,7 @@ function insertFile(fileData, callback) {
 var isXHRrunning = false;
 async function loadImages() {
     var bool = false;
-    
+
     if (returnResult.assets.length > 0) {
         var accessToken = gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().access_token;
         var divString = "<section class='regular slider '>";
@@ -1329,12 +1332,11 @@ function swapDivs(value) {
     }
 }
 
-function listFiles($scope) {
-
+function listFiles($scope) {  
     if ($('#ddlJsonList').css('display') == 'block') {
         $http({
             method: 'GET',
-            url: 'http://192.168.10.132:1337/getAllFlowChartNames',
+            url: config.baseUrl + 'getAllFlowChartNames',
             data: data,
             headers: {
                 'Content-Type': 'application/json; charset=utf-8'
@@ -1385,8 +1387,8 @@ function loadImagesAsList() {
     var bool = false;
     divStringIL = "";
 
-    returnResult.assets.sort(function (a, b) {       
-            return a.Order - b.Order;    
+    returnResult.assets.sort(function (a, b) {
+        return a.Order - b.Order;
     });
 
     if (returnResult.assets && returnResult.assets.length > 0) {

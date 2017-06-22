@@ -385,6 +385,7 @@ angular.module('sbAdminApp')
                 scope.generatePresentation = function () {
                     var imageData;
                     if (jQuery("input[name='testid']").is(':checked')) {
+                        jQuery('div.divUnclearVP').remove();
                         jQuery.blockUI();
                         var rowindex = Number(jQuery("input[name='testid']:checked").val()) - 1;
                         var blockId = testroutes[rowindex];
@@ -449,8 +450,7 @@ angular.module('sbAdminApp')
                         divString += " <div><img id = imageView" + iLoop + " height='50' " + vClass + " width='50' src='" + base64 + "' data-darkbox='" + base64 + "' data-darkbox-group='one'" + " data-darkbox-description='" + fileId + "'></div>";
                         if (xmlHttpReqQueue.length > 0)
                             xmlHttpReqQueue[0].send(null);
-                        else {
-                            jQuery('div.divUnclearVP').remove();
+                        else {                            
                             var el = angular.element("<div class='divUnclearVP' style='display:none'></div>");
                             el.append(divString);
                             // $compile(el)(scope);

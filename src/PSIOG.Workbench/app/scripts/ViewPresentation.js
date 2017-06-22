@@ -6,6 +6,11 @@ var tips = new Array(); var mark = new Array();
 var itemlength, cordlength;
 
 function getMyData(imageData) {
+    xcord = new Array(), ycord = new Array(), str = new Array(), order = new Array();
+    coordinates = [], filename = [];
+    xcp = new Array(), ycp = new Array();
+    mark = new Array();
+
     var width = window.innerWidth;
     var height = window.innerHeight;
     itemlength = imageData.coOrdinates.length;

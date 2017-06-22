@@ -35,6 +35,8 @@
 
                 diagram.addDiagramListener("ObjectContextClicked",
                     function (e) {
+                        scope.blkid = e.subject.part.data.key;
+
                         if (scope.op == 1)
                             OpenPopup(e.subject.part.data);
                         else {
@@ -52,7 +54,7 @@
 
                     jQuery.blockUI();
 
-                    scope.blkid = val.key;
+                   
 
                     $http({
                         method: 'GET',

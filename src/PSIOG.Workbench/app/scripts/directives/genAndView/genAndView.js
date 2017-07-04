@@ -360,6 +360,9 @@ angular.module('sbAdminApp')
                             ]
                         });
 
+                        document.getElementById("flwName").innerHTML = 'Flows for "' + scope.itemSelected.flowchartName + '"';
+
+
                         //$('#testCaseTable tbody').on('click', 'tr', function () {
                         //    var rowindex = table.row(this).index();
                         //    var blockId = testroutes[rowindex];

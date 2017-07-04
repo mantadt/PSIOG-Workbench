@@ -1,4 +1,4 @@
-﻿var count, xcord = new Array(), ycord = new Array(), str = new Array(), order = new Array();
+﻿var count, str = new Array(), order = new Array();
 var coordinates = [], filename = [];
 var xcp = new Array(), ycp = new Array();
 var item;
@@ -21,20 +21,18 @@ function getMyData(imageData) {
     }
 
     for (var i = 0; i < itemlength; i++) {
-        xcord[i] = new Array();
-        ycord[i] = new Array();
+     
         xcp[i] = new Array();
         ycp[i] = new Array();
         order[i] = new Array();
         str[i] = new Array();
         for (var j = 0; j < coordinates[i].length; j++) {
-            xcord[i][j] = coordinates[i][j].xc;
-            ycord[i][j] = coordinates[i][j].yc;
+         
             xcp[i][j] = coordinates[i][j].XCP * width / 100;
             ycp[i][j] = coordinates[i][j].YCP * height / 100;
             order[i][j] = coordinates[i][j].order;
             str[i][j] = coordinates[i][j].message;
-
+                      
         }
     }
 
@@ -47,10 +45,55 @@ function ShowHide() {
 
 }
 
+function savePpt(imgList, x) {
+    var pptx = new PptxGenJS();
+    var slide= new Array();
+    var btn = document.createElement("BUTTON");
+    btn.id = "download"
+    btn.className = "btn-primary PPTDownload";
+    var t = document.createTextNode("DOWNLOAD");      
+    btn.appendChild(t);
+    btn.onclick = function () {
+          $(this).remove();
+           pptx.save("Presentation" + x);
+           //removebtn();
+          
+
+    }
+     document.getElementById("darkbox").append(btn);
+    for (var i = 0; i < imgList.imageList.length; i++)
+    {
+       
+       
+             slide[i] = pptx.addNewSlide();
+             slide[i].addImage({ x: 0, y: 0, w: '100%', h: '100%', data: imgList.imageList[i].sourceString });
+             for(var j = 0 ; j< coordinates[i].length ; j++)
+            {
+                var x1 = coordinates[i][j].XCP+ "%";
+                var y1 = coordinates[i][j].YCP + 5 + "%";
+                var x2 = coordinates[i][j].XCP+2 + "%";
+                var y2 = coordinates[i][j].YCP + 3 + "%";
+                slide[i].addText(order[i][j], { shape: pptx.shapes.OVAL, align: 'c', x: x1, y: y1, w: '2%', h: '3%', fill: '40b840', line: '000000', line_size: 0.5, font_size: 10 }
+                  );
+                  slide[i].addText(str[i][j], { x: x2, y: y2, font_size: 12 }
+                     );
+            }
+           
+        //  }
+            
+    }
+
+   
+}
+function removebtn() {
+    $("#download").remove();
+}
+
 function AnimateListVPJS() {	//  Add tooltips to screen
     $("div.oldMarksVPS").tooltip('destroy');
     $("div.oldMarksVPS").remove();
     var id = document.getElementById("darkbox");
+    
     // if(id.className =="show")
     // var viewImageID = id.getAttribute("data-title");
 

@@ -23,7 +23,7 @@ function handleClick(event) {
     document.getElementById("EditScreen").style.zIndex = 999999;
     document.getElementById("EditScreen").style.display = "block";
     imageID = ImgListen.getAttribute("data-title");
-    var offset = $("#darkbox").offset;
+   // var offset = $("#darkbox").offset;
     var x = event.clientX - 24;//- offset.left;
     var y = event.clientY - 24;// - offset.top;
     console.log(x+ "'"+y);
@@ -52,7 +52,9 @@ function saveList()
     coordinates = [];
     //console.log(finalCords);
     document.getElementById("clear").disabled = true;
-    document.getElementById("anim").disabled=true;
+    document.getElementById("anim").disabled = true;
+    document.getElementById("EditScreen").style.zIndex = 0;
+    document.getElementById("EditScreen").style.display = "none";
     ClearList();
    	   
 }
@@ -61,8 +63,10 @@ function saveList()
 function storeMessage(message, x, y, imageID) {
    
     // store messages in array and display it in side screen
+   var list = document.getElementById("list");
    var liEntry = message ;
    xcord.push(x); ycord.push(y); str.push(message); imgs.push(imageID);
+   var newLI = document.createElement('li');
    var checkbox = document.createElement('input');
     checkbox.type = "checkbox";
     checkbox.name = "message";
@@ -73,10 +77,10 @@ function storeMessage(message, x, y, imageID) {
     label.id = "label"+boxcount;
     label.htmlFor = "box"+boxcount;
     label.appendChild(document.createTextNode(liEntry));
-   
-    list.appendChild(checkbox);
-    list.appendChild(label);
-    label.appendChild(document.createElement('br'));
+
+    newLI.appendChild(checkbox);
+    newLI.appendChild(label);
+    list.appendChild(newLI);
      var x= "box"+boxcount; var y= "label"+boxcount;
     document.getElementById(x).className = "box";
     document.getElementById(y).className = "text";
@@ -126,6 +130,7 @@ function EditList(){
   var boxes = document.getElementsByClassName('box');
   var texts = document.getElementsByClassName('text');
   var len = boxes.length;
+  console.log(boxcount);
     for(var i = 0; i<boxcount; i++){
          box = boxes[i];
          txt = texts[i];
@@ -139,6 +144,8 @@ function EditList(){
             count--;
          }
     }
+    var list = document.getElementById("list");
+    list.innerHTML = list.replace("<br><br>", "<br>")
     
 }
 
@@ -265,7 +272,7 @@ function ClearList()
 	    xcord.pop(); ycord.pop(); str.pop();
 	    imgs.pop();
 	}
-	count = 0; 
+	count = 0; boxcount = 0;
 }
 
 

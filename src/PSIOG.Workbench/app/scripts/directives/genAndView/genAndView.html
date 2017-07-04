@@ -1,4 +1,7 @@
 <script src="/scripts/ViewPresentation.js"></script>
+<script src="/scripts/PptxGenJs/jszip.min.js"></script>
+<script src="/scripts/PptxGenJs/pptxgen.js"></script>
+<script src="/scripts/PptxGenJs/pptxgen.shapes.js"></script>
 <!--<script src="/scripts/directives/genAndView/genandview.js"></script>-->
 
 <div class="panel-body">
@@ -130,7 +133,7 @@
 
 
                         <button id="genPresentation" class="btn btn-primary" ng-click="generatePresentation()">View Presentation</button>
-
+                        <button id="download" class="btn btn-primary" style="display : none" onclick="saveppt()">Download</button>
                     </div>
                     <br>
                     <!-- <div class="mdl-card__actions" style="background-color:#9CCC65" >
@@ -163,15 +166,11 @@
 <!--CSS-->
 
 <style>
-    #ShowHide {
+    #download {
         width: 150px;
-        z-index: 99999;
         position: absolute;
-        top: 95%;
-        left: 89%;
-        height: 25px;
-        background-color: black;
-        color: white;
+        top: 10%;
+        left: 90%;
         border-radius: 4px;
     }
 

@@ -405,7 +405,8 @@ angular.module('sbAdminApp')
                     else
                         alert("Please select a flow!");
                 }
-
+                var imgList;
+                var imgSource = new Array();
                 var divString;
                 function loadImagesDir(returnResult) {
                     var bool = false;
@@ -421,12 +422,14 @@ angular.module('sbAdminApp')
 
                             requestXHR("https://www.googleapis.com/drive/v3/files/" + fileId + '?alt=media', accessToken, iLoop);
                         }
+                       
+                        
                     }
                     else {
                         jQuery.unblockUI();
                         alert('No usability images found!');
                     }
-
+                   
 
                 }
 
@@ -444,6 +447,8 @@ angular.module('sbAdminApp')
                         jQuery("img.imgFirstClick").click();                        
 
                         var base64 = 'data:image/png;base64,' + base64ArrayBufferDir(xmlHttpReq.response);
+                        var item = { fileID: fileId, sourceString: base64 };
+                        imgSource.push(item);
                         if (iLoop == 0)
                             vClass = "class='imgFirstClick'";
                         //rewrie
@@ -457,7 +462,9 @@ angular.module('sbAdminApp')
                             jQuery("#myCarousel").append(el);
                             jQuery("img.imgFirstClick").click();
                             jQuery.unblockUI();
-
+                            imgList = { imageList: imgSource };
+                             var flowchartname = scope.itemSelected.flowchartName;
+                            savePpt(imgList, flowchartname);
                         }
                     }
 

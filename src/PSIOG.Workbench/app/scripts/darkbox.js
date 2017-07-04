@@ -31,6 +31,7 @@
                         e.preventDefault();
                         e.stopPropagation();
                         $darkbox.removeClass("show");
+                        $(".PPTDownload").remove();
                     }
                 }
             }),
@@ -101,6 +102,7 @@
 
             if (k === 27) /*ESC */ {
                 $darkbox.removeClass("show");
+                $(".PPTDownload").remove();
             }
             if (k === 37) /*LEFT*/ {
                 --c;

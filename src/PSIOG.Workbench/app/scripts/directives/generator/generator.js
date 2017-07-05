@@ -184,7 +184,7 @@ angular.module('sbAdminApp')
 
                     semioutp = [];
                     //outp = resultsData;
-                    console.log(outp);
+                    //  console.log(outp);
 
 
                     // var startNode = scope.startNode;
@@ -192,7 +192,7 @@ angular.module('sbAdminApp')
 
                     //var endNode = document.getElementById("endNode");
                     //var endNodeValue = endNode.options[endNode.selectedIndex].value;
-                    console.log(startNodeValue);
+                    //    console.log(startNodeValue);
 
                     //var endNode = document.getElementById("endNode");
                     var endNodeValue = scope.endNode;
@@ -204,13 +204,13 @@ angular.module('sbAdminApp')
                     if (startNodeValue != -1 && endNodeValue == -1) //startNode's value and endNode's value doesnt exist
                     {
                         for (var i = 0; i < outp.length; i++) {
-                            if (outp[i].slice(0, outp[i].indexOf("_")) == startNodeValue)
+                            if (outp[i].route.slice(0, outp[i].route.indexOf("_")) == startNodeValue)
                                 semioutp.push(outp[i]);
 
-                            if (outp[i].indexOf("_" + startNodeValue + "_") != -1)
+                            if (outp[i].route.indexOf("_" + startNodeValue + "_") != -1)
 
-                                semioutp.push(outp[i].slice(outp[i].indexOf("_" + startNodeValue + "_") + 1, outp[i].length));
-                            console.log(semioutp);
+                                semioutp.push({route: outp[i].route.slice(outp[i].route.indexOf("_" + startNodeValue + "_") + 1, outp[i].route.length), flag: outp[i].flag});
+                            //        console.log(semioutp);
 
 
                         }
@@ -220,13 +220,13 @@ angular.module('sbAdminApp')
                     {
                         for (var i = 0; i < outp.length; i++) {
 
-                            if (outp[i].slice(outp[i].lastIndexOf("_") + 1, outp[i].length) == endNodeValue)
+                            if (outp[i].route.slice(outp[i].route.lastIndexOf("_") + 1, outp[i].route.length) == endNodeValue)
                                 semioutp.push(outp[i]);
 
-                            else if (outp[i].indexOf("_" + endNodeValue + "_") != -1)
+                            else if (outp[i].route.indexOf("_" + endNodeValue + "_") != -1)
 
-                                semioutp.push(outp[i].slice(0, outp[i].indexOf("_" + endNodeValue + "_") + ("_" + endNodeValue + "_").length));
-                            console.log(semioutp);
+                                semioutp.push({route: outp[i].route.slice(0, outp[i].route.indexOf("_" + endNodeValue + "_") + ("_" + endNodeValue + "_").length), flag: outp[i].flag});
+                            //     console.log(semioutp);
 
                         }
                     }
@@ -235,30 +235,30 @@ angular.module('sbAdminApp')
                     {
                         for (var i = 0; i < outp.length; i++) {
                             //Handling when case starts with given Start Node - when it ends in End Node or when it doesn't
-                            if (outp[i].slice(0, outp[i].indexOf("_")) == startNodeValue) {
-                                if (outp[i].slice(outp[i].lastIndexOf("_") + 1, outp[i].length) == endNodeValue)
+                            if (outp[i].route.slice(0, outp[i].route.indexOf("_")) == startNodeValue) {
+                                if (outp[i].route.slice(outp[i].route.lastIndexOf("_") + 1, outp[i].route.length) == endNodeValue)
                                     semioutp.push(outp[i]);
 
-                                else if (outp[i].indexOf("_" + endNodeValue + "_") != -1)
+                                else if (outp[i].route.indexOf("_" + endNodeValue + "_") != -1)
 
-                                    semioutp.push(outp[i].slice(0, outp[i].indexOf("_" + endNodeValue + "_") + ("_" + endNodeValue + "_").length));
-                                console.log(semioutp);
+                                    semioutp.push({route:outp[i].route.slice(0, outp[i].route.indexOf("_" + endNodeValue + "_") + ("_" + endNodeValue + "_").length), flag: outp[i].flag});
+                                //           console.log(semioutp);
 
                             }
 
                             //Handling when startNode isnt at start
-                            else if (outp[i].indexOf("_" + startNodeValue + "_") != -1) {
+                            else if (outp[i].route.indexOf("_" + startNodeValue + "_") != -1) {
 
-                                if (outp[i].indexOf("_" + endNodeValue + "_") != -1 || outp[i].slice(outp[i].lastIndexOf("_") + 1, outp[i].length) == endNodeValue) {
+                                if (outp[i].route.indexOf("_" + endNodeValue + "_") != -1 || outp[i].route.slice(outp[i].route.lastIndexOf("_") + 1, outp[i].route.length) == endNodeValue) {
 
-                                    if (outp[i].slice(outp[i].lastIndexOf("_") + 1, outp[i].length) == endNodeValue) {
-                                        semioutp.push(outp[i].slice(outp[i].indexOf("_" + startNodeValue + "_") + 1, outp[i].length));
-                                        console.log(semioutp);
+                                    if (outp[i].route.slice(outp[i].route.lastIndexOf("_") + 1, outp[i].route.length) == endNodeValue) {
+                                        semioutp.push(outp[i].route.slice(outp[i].route.indexOf("_" + startNodeValue + "_") + 1, outp[i].route.length));
+                                        //     console.log(semioutp);
                                     }
 
-                                    else if (outp[i].indexOf("_" + startNodeValue + "_") < outp[i].indexOf("_" + endNodeValue + "_")) {
-                                        semioutp.push(outp[i].slice(outp[i].indexOf("_" + startNodeValue + "_") + 1, outp[i].indexOf("_" + endNodeValue + "_") + ("_" + endNodeValue + "_").length));
-                                        console.log(semioutp);
+                                    else if (outp[i].route.indexOf("_" + startNodeValue + "_") < outp[i].route.indexOf("_" + endNodeValue + "_")) {
+                                        semioutp.push({route:outp[i].route.slice(outp[i].route.indexOf("_" + startNodeValue + "_") + 1, outp[i].route.indexOf("_" + endNodeValue + "_") + ("_" + endNodeValue + "_").length), flag: outp[i].flag});
+                                        //             console.log(semioutp);
                                     }
 
                                 }
@@ -275,16 +275,65 @@ angular.module('sbAdminApp')
 
                     //Ensuring unique routes
                     var uniqueRoutes = [];
+                    var tempRoutes = [];
                     $.each(semioutp, function (i, el) {
-                        if ($.inArray(el, uniqueRoutes) === -1) uniqueRoutes.push(el);
+                        if ($.inArray(el.route, tempRoutes) === -1) {
+                            tempRoutes.push(el.route);
+                            uniqueRoutes.push(el);
+                        }
                     });
 
-                    console.log(semioutp);
+                    // console.log(semioutp);
+                    semioutp = uniqueRoutes;
+                    console.log("here", semioutp);
+                    scope.displayCombinations(semioutp, nodes, links);
+
+
+                }
+
+                scope.nodeListDigress = function (start) {
+
+                    semioutp = [];
+                    alert(start);
+
+                    var startNodeValue = start;
+                    var endNodeValue = -1;
+
+                  if (startNodeValue != -1 && endNodeValue == -1) //startNode's value and endNode's value doesnt exist
+                    {
+                        for (var i = 0; i < outp.length; i++) {
+                            if (outp[i].route.slice(0, outp[i].route.indexOf("_")) == startNodeValue)
+                                semioutp.push(outp[i]);
+
+                            if (outp[i].route.indexOf("_" + startNodeValue + "_") != -1)
+
+                                semioutp.push({route: outp[i].route.slice(outp[i].route.indexOf("_" + startNodeValue + "_") + 1, outp[i].route.length), flag: outp[i].flag});
+                            //        console.log(semioutp);
+
+
+                        }
+                    }
+
+
+
+                    //Ensuring unique routes
+                    var uniqueRoutes = [];
+                    var tempRoutes = [];
+                    $.each(semioutp, function (i, el) {
+                        if ($.inArray(el.route, tempRoutes) === -1) {
+                            tempRoutes.push(el.route);
+                            uniqueRoutes.push(el);
+                        }
+                    });
+
+
+                    // console.log(semioutp);
                     semioutp = uniqueRoutes;
                     scope.displayCombinations(semioutp, nodes, links);
 
 
                 }
+
 
                 scope.displayCombinations = function (outputArray, nodes, links, first) {
                     //Display combinatiomns
@@ -294,7 +343,7 @@ angular.module('sbAdminApp')
                     for (var i = 0; i < outputArray.length; i++) {
                         var testroutes = [];
                         var teststmt = "";
-                        var temparray = outputArray[i].split("_");
+                        var temparray = outputArray[i].route.split("_");
                         var tempStatement = "";
                         console.log("  ");
                         for (var j = 0; j < temparray.length; j++) {
@@ -316,13 +365,14 @@ angular.module('sbAdminApp')
                         tempStatement = tempStatement.slice(4, tempStatement.length);
                         var pushobject = {};
                         pushobject.sno = i + 1;
-                        pushobject.testcase = tempStatement
+                        pushobject.testcase = tempStatement;
+                        pushobject.flag = outputArray[i].flag;
+                        pushobject.route = outputArray[i].route;
+
                         dataTable.push(pushobject);
                         testroutes.push(teststmt);
                         console.log(teststmt);
 
-
-                        // document.getElementById("testcases").innerHTML += "<li>"+ tempStatement + "\n </li>";
                     }
                     console.log(dataTable);
 
@@ -334,13 +384,18 @@ angular.module('sbAdminApp')
                     }
 
                     $(document).ready(function () {
-                        $('#testCaseTable').DataTable({
+                        var table = $('#testCaseTable').DataTable({
                             data: dataTable,
                             dom: 'Bfrtip',
                             "bDestroy": true,
+                            
+                            
                             columns: [
                                 { title: 'S.No', data: 'sno' },
                                 { title: 'Test Case', orderable: false, data: 'testcase' }
+                               // { title: 'Loop?', orderable: false, data: 'flag'},
+                               // {title: 'Route', orderable: false, data:'route', visibility:false}
+
                             ],
                             buttons: [
                                 {
@@ -352,8 +407,28 @@ angular.module('sbAdminApp')
                                 'excelHtml5',
                                 'csvHtml5',
                                 'pdfHtml5'
-                            ]
+                            ],
+                            "createdRow": function( row, data, dataIndex ) {
+                                //console.log(data);
+                                if ( data.flag == "L" ) {
+                                   // alert("YESSS");
+                                $(row).addClass('grey');
+                                }
+                            },
                         });
+
+                     $('#testCaseTable tbody').on( 'click', 'tr', function () {
+                        if ( $(this).hasClass('selected') ) {
+                            $(this).removeClass('selected');
+                            console.log(table.row('.selected').data());
+                           
+                        }
+                        else {
+                            table.$('tr.selected').removeClass('selected');
+                            $(this).addClass('selected');
+                            console.log(table.row('.selected').data()); 
+                        }
+                    } );
                     });
 
 

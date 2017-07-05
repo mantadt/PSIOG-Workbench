@@ -114,7 +114,7 @@ app.post('/generateFromJson', function (req, res) {
 
 
 
-http.createServer(app).listen(app.get('port'), function () {
+http.createServer(app).listen(app.get('port'),"0.0.0.0", function () {
     console.log('Express server listening on port ' + app.get('port'));
 });
 
@@ -227,53 +227,54 @@ function loopChecker(maintainer) {
     return false;
 
 }
+function loopCheckerShort(maintainer){
+
+     if (!maintainer)
+        return false;
+
+    var str = maintainer;
+    //Get the last digit/id
+    var idToCheck = str.substring(str.lastIndexOf("_") + 1, str.length);
+
+    //Count number of times the id appears
+    var chars = str.split(/[_]+/);
+
+    var n = 0;
+    for (var k = 0; k < chars.length; k++) {
+        if (chars[k] == idToCheck)
+            n++;
+    }
+
+    if (n > 1) return true;
+    else return false;
+}
 
 function combinator(nodes, links) {
 
-    console.log(loopChecker("2_4_3_7_6_20_3_7_6_20_3"));
-    ////console.log("Done testing");
+    //console.log(loopChecker("2_4_3_7_6_20_3_7_6_20_3"));
+    
     var outputArray = [];
-
     var numberofcombos = 0;
 
-    ////console.log( links);
     //Finding the primary node's ID
     var primaryid;
     for (var i = 0; i < nodes.length; i++)
         if (nodes[i].primary == "P") {
             primaryid = nodes[i].id;
-            //console.log("Reached here ");
         }
-    ////console.log("Primaru node "+ primaryid);
-
-
 
     //Maintainer array
     var maintainer = [];
     maintainer.push(primaryid.toString());
 
-
-    //Append first time combinations
-    //for(var i=0;i<links.length;i++)
-    //{
-    // if(links[i].from==primaryid)
-
-    //}
-
-
     //Scan through the links to find the primary links
     var globalexhausted = false;
-    //r looper=0;
 
     var start = new Date().getTime();
     //var elapsed = new Date().getTime() - start; && ((new Date().getTime() - start)<15000)
 
     while (!globalexhausted && ((new Date().getTime() - start) < 2500)) {
-
-        console.log("Maintainer", maintainer);
-        console.log("Out", outputArray);
-        //setTimeout( function(){}, 5000);
-
+        
         if (maintainer.length == 0)
             break;
 
@@ -284,96 +285,56 @@ function combinator(nodes, links) {
         for (var i = 0; i < maintainer.length; i++) {
             idToCheck = maintainer[i].substring(maintainer[i].lastIndexOf("_") + 1, maintainer[i].length);
             var check = checkForMoreNodes(idToCheck, nodes, links);
-            ////console.log(check);
 
-
-
-
-
-
-
+          
+           
+           //Check if more or nodes there -- Case No more nodes
             if (!check) {
-
-                //exhausted = true;
-                ////console.log()
-                outputArray.push(maintainer[i]);
-                //maintainer.splice(i, 1);
-                //i--;
-                ////console.log("When does it reach this");
-
+               outputArray.push({'route':maintainer[i], 'flag':'N'});
             }
 
+           //Check if more or nodes there -- Case More Nodes Exist
             else {
+
+                 //Check if the elements have a looping scenario
+                if(loopCheckerShort(maintainer[i]))
+                {
+                    outputArray.push({'route':maintainer[i], 'flag':'L'});
+                }
+
+                else{
 
                 exhausted = false;
                 //Write logic to add appended values and remove the existing maintainer element
                 var temp = maintainer[i];
                 //maintainer.splice(i, 1);
                 for (var j = 0; j < check.length; j++) {
-
                     maintainerTemp.push(temp + "_" + check[j]);
-
-
                 }
 
-            }
+            }}
 
-        }
-
-
-
-
-
-
-
-
-
-
-        ////console.log("exhausted?"+exhausted);
+             }
+        
         globalexhausted = exhausted;
 
-        //var onlyloopelements = true;
-        var loopCheck1 = false;
-        if (maintainerTemp.length < 1)
-            break;
+        // //Old code to check for looping
 
-        for (var n = 0; n < maintainerTemp.length; n++) {
+        // var loopCheck1 = false;
+        // if (maintainerTemp.length < 1)
+        //     break;
 
+        // for (var n = 0; n < maintainerTemp.length; n++) {
+        //     var loopCheck1 = loopCheckerShort(maintainerTemp[n]);
+        //     if (loopCheck1 == true) {
+        //         maintainerTemp.splice(n, 1);
+        //     }
+        // }
+         maintainer = maintainerTemp;
 
-            var loopCheck1 = loopChecker(maintainerTemp[n]);
-            //console.log(loopCheck1);
-
-            if (loopCheck1 == true) {
-                //exhausted = false;
-                //console.log("removing looped element froms tack "+maintainerTemp[n]);
-                maintainerTemp.splice(n, 1);
-                //i--;
-            }
-
-
-            //else
-            //onlyloopelements = false;
-        }
-
-
-
-
-
-
-
-
-        // if(onlyloopelements)
-        // globalexhausted = true;
-
-        maintainer = maintainerTemp;
-    }
-
-
-
-
+ }
 
     return outputArray;
-    ////console.log(links);
 
 
 }

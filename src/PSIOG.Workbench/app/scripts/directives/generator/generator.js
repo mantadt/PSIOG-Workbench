@@ -358,7 +358,9 @@ angular.module('sbAdminApp')
 
 
                     document.getElementById("numberofresults").innerHTML = "We generated " + outputArray.length + " test cases for you!\n";
+                    document.getElementById("flwName").innerHTML = 'Test cases for "' + scope.itemSelected.flowchartName +'"';
 
+                    
 
                 }
 

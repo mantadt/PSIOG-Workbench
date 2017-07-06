@@ -1,8 +1,8 @@
-var count = 0, xcord = [], ycord = [], str=[];;    
+var count = 0, xcord = [], ycord = [], str = [];;
 var coordinates = [];
-var img; 
+var img;
 var item;
-var tips=[]; var mark=[];
+var tips = []; var mark = [];
 var boxcount = 0;
 var checkDB = false;
 var ImgListen = document.getElementById("darkbox");
@@ -14,8 +14,8 @@ var finalCords = [];
 
 
 $(document).ready(function () {
-
-       ImgListen.addEventListener('mousedown', handleClick);
+    $(ImgListen).unbind('mousedown').bind('mousedown', handleClick);
+    //ImgListen.addEventListener('mousedown', handleClick);
 });
 
 
@@ -23,10 +23,10 @@ function handleClick(event) {
     document.getElementById("EditScreen").style.zIndex = 999999;
     document.getElementById("EditScreen").style.display = "block";
     imageID = ImgListen.getAttribute("data-title");
-    var offset = $("#darkbox").offset;
+    // var offset = $("#darkbox").offset;
     var x = event.clientX - 24;//- offset.left;
     var y = event.clientY - 24;// - offset.top;
-    console.log(x+ "'"+y);
+    console.log(x + "'" + y);
     var message = prompt("Enter tooltip text:");
     if (message != null) {
         if (message.length != 0) {
@@ -38,9 +38,8 @@ function handleClick(event) {
     }
 }
 
-function saveList()
-{
-   
+function saveList() {
+
     for (var i = 0; i < count; i++) {
         // store messages and coordinates in json
         var xcx = xcord[i] * 100 / window.innerWidth;
@@ -52,37 +51,41 @@ function saveList()
     coordinates = [];
     //console.log(finalCords);
     document.getElementById("clear").disabled = true;
-    document.getElementById("anim").disabled=true;
+    document.getElementById("anim").disabled = true;
+    document.getElementById("EditScreen").style.zIndex = 0;
+    document.getElementById("EditScreen").style.display = "none";
     ClearList();
-   	   
+
 }
 
 
 function storeMessage(message, x, y, imageID) {
-   
+
     // store messages in array and display it in side screen
-   var liEntry = message ;
-   xcord.push(x); ycord.push(y); str.push(message); imgs.push(imageID);
-   var checkbox = document.createElement('input');
+    var list = document.getElementById("list");
+    var liEntry = message;
+    xcord.push(x); ycord.push(y); str.push(message); imgs.push(imageID);
+    var newLI = document.createElement('li');
+    var checkbox = document.createElement('input');
     checkbox.type = "checkbox";
     checkbox.name = "message";
-    checkbox.value = message ;
-    checkbox.id = "box"+boxcount;
+    checkbox.value = message;
+    checkbox.id = "box" + boxcount;
 
     var label = document.createElement('label');
-    label.id = "label"+boxcount;
-    label.htmlFor = "box"+boxcount;
+    label.id = "label" + boxcount;
+    label.htmlFor = "box" + boxcount;
     label.appendChild(document.createTextNode(liEntry));
-   
-    list.appendChild(checkbox);
-    list.appendChild(label);
-    label.appendChild(document.createElement('br'));
-     var x= "box"+boxcount; var y= "label"+boxcount;
+
+    newLI.appendChild(checkbox);
+    newLI.appendChild(label);
+    list.appendChild(newLI);
+    var x = "box" + boxcount; var y = "label" + boxcount;
     document.getElementById(x).className = "box";
     document.getElementById(y).className = "text";
     count++;
-   boxcount++;
-    
+    boxcount++;
+
 }
 
 /*function getMousePos(evt) {
@@ -92,7 +95,7 @@ function storeMessage(message, x, y, imageID) {
         y: evt.clientY 
     };
 }*/
-      
+
 /*function getCords(event) {
     //get message from input for each coordinates
     
@@ -121,29 +124,31 @@ function getMousePos(event) {
     
     */
 
-function EditList(){
+function EditList() {
     // remove checked entry
-  var boxes = document.getElementsByClassName('box');
-  var texts = document.getElementsByClassName('text');
-  var len = boxes.length;
-    for(var i = 0; i<boxcount; i++){
-         box = boxes[i];
-         txt = texts[i];
-         if(box!=null && box.checked){
+    var boxes = document.getElementsByClassName('box');
+    var texts = document.getElementsByClassName('text');
+    var len = boxes.length;
+    console.log(boxcount);
+    for (var i = 0; i < boxcount; i++) {
+        box = boxes[i];
+        txt = texts[i];
+        if (box != null && box.checked) {
             box.parentNode.removeChild(box);
             txt.parentNode.removeChild(txt);
-            xcord.splice(i,1);
-            ycord.splice(i,1); 
+            xcord.splice(i, 1);
+            ycord.splice(i, 1);
             str.splice(i, 1);
             imgs.splice(i, 1);
             count--;
-         }
+        }
     }
-    
+    var list = document.getElementById("list");
+    list.innerHTML = list.replace("<br><br>", "<br>")
+
 }
 
-function AnimateList()
-{	//  Add tooltips to screen
+function AnimateList() {	//  Add tooltips to screen
     $("div.oldMarksVPS").tooltip('destroy');
     $("div.oldMarksVPS").remove();
     var guid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
@@ -151,7 +156,7 @@ function AnimateList()
         return v.toString(16);
     });
 
-    var y= []; var z=[];
+    var y = []; var z = [];
 	/*for(var i =0; i<count;i++)
     {
 	      tips[i]=  document.createElement('div');
@@ -185,7 +190,7 @@ function AnimateList()
           mark[i].onmouseout  = function() {  mouseOut(event);}
           mark[i].onmouseover = function() { mouseOver(event);}
     }*/
-    for (var j =0; j<count;j++) {
+    for (var j = 0; j < count; j++) {
         mark[j] = document.createElement('div');
         mark[j].id = 'mark' + j;
         mark[j].style.position = 'absolute';
@@ -203,14 +208,14 @@ function AnimateList()
         mark[j].className = 'oldMarksVPS c' + guid;
         document.getElementById("darkbox").appendChild(mark[j]);
     }
-    
+
     $("div.oldMarksVPS").tooltip({ delay: { hide: 2000 }, placement: 'right' });
     $("div.oldMarksVPS").tooltip('show');
     setTimeout(function () { $("div.oldMarksVPS.c" + guid).tooltip('hide') }, 2000);
 
     setTimeout(RemoveAnimate, 10000);
-   document.getElementById("anim").disabled=true;   
-   
+    document.getElementById("anim").disabled = true;
+
 }
 
 
@@ -233,42 +238,36 @@ function mouseOver(event){
     }
 }*/
 
-function RemoveAnimate()
-{	//  Remove tooltips added	
+function RemoveAnimate() {	//  Remove tooltips added	
     $("div.oldMarksVPS").tooltip('destroy');
     $("div.oldMarksVPS").remove();
-	for(var i =0; i<count;i++)
-    {
-	    //  var id1 = "tip"+i;
-          var id2 = "mark"+i;
-	    //  if(id1 !=null && id2 !=null)
-	      if(id2 !=null)
-          {
-           //   var op1= document.getElementById(id1);
-           //   op1.parentNode.removeChild(op1);
-              var op2= document.getElementById(id2);
-              op2.parentNode.removeChild(op2);
-          }
-   }
-    document.getElementById("anim").disabled=false; 
-    
+    for (var i = 0; i < count; i++) {
+        //  var id1 = "tip"+i;
+        var id2 = "mark" + i;
+        //  if(id1 !=null && id2 !=null)
+        if (id2 != null) {
+            //   var op1= document.getElementById(id1);
+            //   op1.parentNode.removeChild(op1);
+            var op2 = document.getElementById(id2);
+            op2.parentNode.removeChild(op2);
+        }
+    }
+    document.getElementById("anim").disabled = false;
+
 }
 
-function ClearList()
-{	
-	var list = document.getElementById("list");
+function ClearList() {
+    var list = document.getElementById("list");
     while (list.hasChildNodes()) {
         list.removeChild(list.lastChild);
     }
-	for(var i =0; i<=count;i++)
-    {
-	    xcord.pop(); ycord.pop(); str.pop();
-	    imgs.pop();
-	}
-	count = 0; 
+    for (var i = 0; i <= count; i++) {
+        xcord.pop(); ycord.pop(); str.pop();
+        imgs.pop();
+    }
+    count = 0; boxcount = 0;
 }
 
 
 
-   
-   
+

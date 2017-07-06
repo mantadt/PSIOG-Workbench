@@ -1,0 +1,22 @@
+diff a/src/PSIOG.Workbench/app/scripts/ViewPresentation.js b/src/PSIOG.Workbench/app/scripts/ViewPresentation.js	(rejected hunks)
+@@ -30,11 +30,19 @@
+             order[i][j] = coordinates[i][j].order;
+             str[i][j] = coordinates[i][j].message;
+                       
++           // slide[i].addText(order[i][j], { shape: pptx.shapes.CIRCLE, align: 'c', x:  coordinates[i][j].XCP / 100, y: coordinates[i][j].YCP / 100, w: '3%', h: '5%', fill: '40b840', line: '000000', line_size: 0.5 }
++	      //  );
++          //  slide[i].addText(str[i][j], { x: coordinates[i][j].XCP / 100 + 0.3, y: coordinates[i][j].YCP / 100 + 0.05, font_size: 12 }
++           //     );
++
++           
+         }
+     }
+ 
+ }
+-
++function downloadPPT() {
++  //  pptx.save("Presentation");
++}
+ //document.getElementById("darkbox").onclick = AnimateList();
+ 
+ function ShowHide() {

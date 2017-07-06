@@ -73,6 +73,9 @@
     <Content Include="app\scripts\directives\generator\generator.html" />
     <Content Include="app\scripts\directives\generator\generator.js" />
     <Content Include="app\scripts\directives\modal\fileUploadPopup.html" />
+    <Content Include="app\scripts\PptxGenJs\jszip.min.js" />
+    <Content Include="app\scripts\PptxGenJs\pptxgen.js" />
+    <Content Include="app\scripts\PptxGenJs\pptxgen.shapes.js" />
     <Content Include="app\scripts\slideshowplugin.js" />
     <Content Include="app\scripts\vendor\jquery.blockUI.js" />
     <Content Include="app\scripts\ViewPresentation.js" />

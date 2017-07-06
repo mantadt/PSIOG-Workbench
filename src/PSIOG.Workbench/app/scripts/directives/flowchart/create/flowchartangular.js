@@ -35,6 +35,11 @@
 
                 diagram.addDiagramListener("ObjectContextClicked",
                     function (e) {
+                        scope.blkid = e.subject.part.data.key;
+
+                        //jQuery("div.oldMarksVPS").tooltip('destroy');
+                        //jQuery("div.oldMarksVPS").remove();   
+
                         if (scope.op == 1)
                             OpenPopup(e.subject.part.data);
                         else {
@@ -52,7 +57,7 @@
 
                     jQuery.blockUI();
 
-                    scope.blkid = val.key;
+
 
                     $http({
                         method: 'GET',
@@ -93,12 +98,11 @@
                                 bool = true;
                         }
                     }
-                    else
-                    {
+                    else {
                         jQuery.unblockUI();
                         notifyUSFailure();
                     }
-                      
+
                 }
 
                 var xmlHttpReqQueue = new Array();
@@ -195,8 +199,8 @@
 
                 function OpenPopup(obj) {
 
-                   jQuery('ul.tabs li').click(function () {
-                       var tab_id = jQuery(this).attr('data-toggle');
+                    jQuery('ul.tabs li').click(function () {
+                        var tab_id = jQuery(this).attr('data-toggle');
 
                         jQuery('ul.tabs li').removeClass('current');
                         jQuery('.tab-content').removeClass('current');
@@ -734,30 +738,31 @@
 
         $scope.saveUsability = function () {
             flowchartID = $scope.itemSelected.flowChartID;
-            blockID = $scope.blkid; 
+            blockID = $scope.blkid;
             var imageCount = finalCords.length;
-           
-            for(var i =0; i<imageCount ; i++)
-            {
-                var item = { "flowchartID": flowchartID, "blockID": blockID, "FileID" : finalCords[i].ImageID, "coordinates":  finalCords[i].coordinates};
-                var data  = angular.toJson(item, true);
+            var kc = 0;
+            for (var i = 0; i < imageCount; i++) {
+                var item = { "flowchartID": flowchartID, "blockID": blockID, "FileID": finalCords[i].ImageID, "coordinates": finalCords[i].coordinates };
+                var data = angular.toJson(item, true);
                 var url = config.baseUrl + 'addCoordinates';
-               // console.log("post");
+                // console.log("post");
                 console.log(JSON.stringify(data));
                 $.ajax({
-                    crossDomain:"true",
-                    type:"POST",
+                    crossDomain: "true",
+                    type: "POST",
                     url: url,
-                    data :  data,
+                    data: data,
                     cache: false,
                     timeout: 50000,
-                    contentType :"application/json",
-                    success: function(response){ 
+                    contentType: "application/json",
+                    success: function (response) {
                         console.log(response);
-                   
+                        kc++;
+                        /*if (kc == imageCount)
+                            alert("Saved successfully!");*/
                     },
-                    error: function(jqXHR, textStatus, errorThrown) {
-                    
+                    error: function (jqXHR, textStatus, errorThrown) {
+
                         console.log('error ' + textStatus + " " + errorThrown);
                     }
                 });
@@ -1332,7 +1337,7 @@ function swapDivs(value) {
     }
 }
 
-function listFiles($scope) {  
+function listFiles($scope) {
     if ($('#ddlJsonList').css('display') == 'block') {
         $http({
             method: 'GET',

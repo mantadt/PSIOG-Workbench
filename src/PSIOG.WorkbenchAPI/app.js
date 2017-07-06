@@ -114,7 +114,7 @@ app.post('/generateFromJson', function (req, res) {
 
 
 
-http.createServer(app).listen(app.get('port'), function () {
+http.createServer(app).listen(app.get('port'),"0.0.0.0", function () {
     console.log('Express server listening on port ' + app.get('port'));
 });
 

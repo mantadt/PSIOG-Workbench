@@ -14,7 +14,7 @@
     }
 
     /* Modal Content/Box */
-
+    .text {clear:right;}
 
     .modal-content {
         background-color: #fefefe;
@@ -102,20 +102,21 @@
        #EditScreen:hover {
            left: 80%; 
        }
-     ol li{
-       color : white;
-     }
+       ul{
+           list-style-type: none;
+       }
+             
 </style>
 
 
 <div>
     <div id="EditScreen">
-        <ol id="list"></ol>
+        <ul id="list"></ul>
         <div>
 
-            <button class="button" id="clear" onclick="EditList()">Remove Entry</button>
-            <button class="button" id="anim" onclick="AnimateList()">Animate Entry</button>
-            <button class="button" id="downloadbtn" onclick="saveList()">Done!</button>
+            <button class="btn-primary" id="clear" onclick="EditList()">Remove Entry</button>
+            <button class="btn-primary" id="anim" onclick="AnimateList()">Animate</button>
+            <button class="btn-primary" id="downloadbtn" onclick="saveList()">Done</button>
         </div>
     </div>
 

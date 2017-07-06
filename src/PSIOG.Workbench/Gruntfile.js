@@ -229,7 +229,7 @@ module.exports = function (grunt) {
       build: {
         files: [{
             expand: true,
-            src: '**/*.js',
+            src: ['**/*.js','!**/flowchartangular.js'],
             dest: '<%= yeoman.dist %>/scripts',
             cwd: '<%= yeoman.app %>/scripts'
         }]
@@ -290,7 +290,7 @@ module.exports = function (grunt) {
         files: [{
           expand: true,
          cwd: '<%= yeoman.app %>/scripts',
-          src: '**/*.js',
+         src: ['**/*.js','!**/flowchartangular.js'],
          dest: '<%= yeoman.dist %>/scripts',
         }]
       }

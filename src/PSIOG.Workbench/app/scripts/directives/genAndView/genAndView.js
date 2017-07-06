@@ -414,6 +414,7 @@ angular.module('sbAdminApp')
                 function loadImagesDir(returnResult) {
                     var bool = false;
                     divString = "";
+                    imgSource = new Array();
 
                     if (returnResult.coOrdinates && returnResult.coOrdinates.length > 0) {
                         // PNotify.removeAll();

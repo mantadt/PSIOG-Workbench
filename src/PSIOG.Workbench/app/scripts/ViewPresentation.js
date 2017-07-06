@@ -6,10 +6,7 @@ var tips = new Array(); var mark = new Array();
 var itemlength, cordlength;
 
 function getMyData(imageData) {
-    xcord = new Array(), ycord = new Array(), str = new Array(), order = new Array();
-    coordinates = [], filename = [];
-    xcp = new Array(), ycp = new Array();
-    mark = new Array();
+    ResetVPSContext();
 
     var width = window.innerWidth;
     var height = window.innerHeight;
@@ -21,21 +18,28 @@ function getMyData(imageData) {
     }
 
     for (var i = 0; i < itemlength; i++) {
-     
+
         xcp[i] = new Array();
         ycp[i] = new Array();
         order[i] = new Array();
         str[i] = new Array();
         for (var j = 0; j < coordinates[i].length; j++) {
-         
+
             xcp[i][j] = coordinates[i][j].XCP * width / 100;
             ycp[i][j] = coordinates[i][j].YCP * height / 100;
             order[i][j] = coordinates[i][j].order;
             str[i][j] = coordinates[i][j].message;
-                      
+
         }
     }
 
+}
+
+function ResetVPSContext() {
+    xcord = new Array(), ycord = new Array(), str = new Array(), order = new Array();
+    coordinates = [], filename = [];
+    xcp = new Array(), ycp = new Array();
+    mark = new Array();
 }
 
 //document.getElementById("darkbox").onclick = AnimateList();
@@ -47,43 +51,41 @@ function ShowHide() {
 
 function savePpt(imgList, x) {
     var pptx = new PptxGenJS();
-    var slide= new Array();
+    var slide = new Array();
     var btn = document.createElement("BUTTON");
     btn.id = "download"
     btn.className = "btn-primary PPTDownload";
-    var t = document.createTextNode("DOWNLOAD");      
+    var t = document.createTextNode("DOWNLOAD");
     btn.appendChild(t);
     btn.onclick = function () {
-          $(this).remove();
-           pptx.save("Presentation" + x);
-           //removebtn();
-          
+        $(this).remove();
+        pptx.save("Presentation" + x);
+        //removebtn();
+
 
     }
-     document.getElementById("darkbox").append(btn);
-    for (var i = 0; i < imgList.imageList.length; i++)
-    {
-       
-       
-             slide[i] = pptx.addNewSlide();
-             slide[i].addImage({ x: 0, y: 0, w: '100%', h: '100%', data: imgList.imageList[i].sourceString });
-             for(var j = 0 ; j< coordinates[i].length ; j++)
-            {
-                var x1 = coordinates[i][j].XCP+ "%";
-                var y1 = coordinates[i][j].YCP + 5 + "%";
-                var x2 = coordinates[i][j].XCP+2 + "%";
-                var y2 = coordinates[i][j].YCP + 3 + "%";
-                slide[i].addText(order[i][j], { shape: pptx.shapes.OVAL, align: 'c', x: x1, y: y1, w: '2%', h: '3%', fill: '40b840', line: '000000', line_size: 0.5, font_size: 10 }
-                  );
-                  slide[i].addText(str[i][j], { x: x2, y: y2, font_size: 12 }
-                     );
-            }
-           
+    document.getElementById("darkbox").append(btn);
+    for (var i = 0; i < imgList.imageList.length; i++) {
+
+
+        slide[i] = pptx.addNewSlide();
+        slide[i].addImage({ x: 0, y: 0, w: '100%', h: '100%', data: imgList.imageList[i].sourceString });
+        for (var j = 0; j < coordinates[i].length; j++) {
+            var x1 = coordinates[i][j].XCP + "%";
+            var y1 = coordinates[i][j].YCP + 5 + "%";
+            var x2 = coordinates[i][j].XCP + 2 + "%";
+            var y2 = coordinates[i][j].YCP + 3 + "%";
+            slide[i].addText(order[i][j], { shape: pptx.shapes.OVAL, align: 'c', x: x1, y: y1, w: '2%', h: '3%', fill: '40b840', line: '000000', line_size: 0.5, font_size: 10 }
+            );
+            slide[i].addText(str[i][j], { x: x2, y: y2, font_size: 12 }
+            );
+        }
+
         //  }
-            
+
     }
 
-   
+
 }
 function removebtn() {
     $("#download").remove();
@@ -93,16 +95,18 @@ function AnimateListVPJS() {	//  Add tooltips to screen
     $("div.oldMarksVPS").tooltip('destroy');
     $("div.oldMarksVPS").remove();
     var id = document.getElementById("darkbox");
-    
+
     // if(id.className =="show")
     // var viewImageID = id.getAttribute("data-title");
 
-    var len, pos;
+    var len = 0, pos;
     // for (var i = 0; i < itemlength; i++) {
     //    if (viewImageID = filename[i]) {
     //       console.log(viewImageID + ":::" + filename[i]);
     pos = id.getAttribute("myID");
-    len = coordinates[pos].length;
+
+    if (coordinates[pos])
+        len = coordinates[pos].length;
 
     var guid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
         var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
@@ -124,7 +128,7 @@ function AnimateListVPJS() {	//  Add tooltips to screen
         mark[j].style.top = (ycp[pos][j]) + 'px';
         mark[j].style.left = (xcp[pos][j] + 5) + 'px';
         mark[j].innerHTML = j + 1;
-        mark[j].dataToggle = 'tooltip';        
+        mark[j].dataToggle = 'tooltip';
         mark[j].title = str[pos][j];
         mark[j].className = 'oldMarksVPS c' + guid;
         document.getElementById("darkbox").appendChild(mark[j]);

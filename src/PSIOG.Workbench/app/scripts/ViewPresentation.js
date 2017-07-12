@@ -4,6 +4,7 @@ var xcp = new Array(), ycp = new Array();
 var item;
 var tips = new Array(); var mark = new Array();
 var itemlength, cordlength;
+var pptFooterText = 'WorkBench Ⓒ Psiog Digital';
 
 function getMyData(imageData) {
     ResetVPSContext();
@@ -46,47 +47,72 @@ function ResetVPSContext() {
 
 function ShowHide() {
     AnimateListVPJS();
-
 }
 
 function savePpt(imgList, x) {
+    var currentSlide, captionList;
+
+    //Frame a master and title slide
+    var pptMaster = {
+        masterSLide: {
+            bkgd: 'FAD7A0',
+            objects: [
+              { 'line': { x: '2%', y: '10%', w: '96%', line: '0088CC', line_size: 1 } },
+              { 'rect': { x: '2%', y: '13%', w: '23%', h: '83%', fill: 'F1F1F1' } },
+              { 'text': { text: x, options: { font_face: 'Calibri', align: 'c', x: '10%', y: '3%', w: '80%', h: '5%', font_size : 18 } } },
+              { 'text': { text: pptFooterText, options: { font_face: 'Calibri', align: 'r', x: '70%', y: '95%', w: '25%', h: '5%', font_size : 12 } } },
+            ],
+            slideNumber: { x: '95%', y: '93%', border: { pt: '0', color: 'FAD7A0' }}
+        },
+        titleSlide: {
+            bkgd: 'FAD7A0',
+            objects: [
+              { 'text': { text: 'WorkBench - CrewLink', options: { x: '25%', y: '40%', w: '50%', h: '20%', font_face: 'Calibri', font_size: 32, align : 'c' } } },
+              { 'text': { text: pptFooterText, options: { font_face: 'Calibri', align: 'r', x: '70%', y: '95%', w: '25%', h: '5%', font_size: 12 } } },
+            ]
+        }
+    };
+
+    //Create a new PPT
     var pptx = new PptxGenJS();
-    var slide = new Array();
+    pptx.setLayout('LAYOUT_16x9');
+    pptx.addNewSlide(pptMaster.titleSlide);
+
     var btn = document.createElement("BUTTON");
     btn.id = "download"
     btn.className = "btn-primary PPTDownload";
     var t = document.createTextNode("DOWNLOAD");
     btn.appendChild(t);
+
     btn.onclick = function () {
         $(this).remove();
-        pptx.save("Presentation" + x);
-        //removebtn();
-
-
+        pptx.save("workBenchPresentation" + x);
     }
+
     document.getElementById("darkbox").append(btn);
+
     for (var i = 0; i < imgList.imageList.length; i++) {
+        captionList = [];
+        currentSlide = pptx.addNewSlide(pptMaster.masterSLide);
 
-
-        slide[i] = pptx.addNewSlide();
-        slide[i].addImage({ x: 0, y: 0, w: '100%', h: '100%', data: imgList.imageList[i].sourceString });
         for (var j = 0; j < coordinates[i].length; j++) {
-            var x1 = coordinates[i][j].XCP + "%";
-            var y1 = coordinates[i][j].YCP + 5 + "%";
-            var x2 = coordinates[i][j].XCP + 2 + "%";
-            var y2 = coordinates[i][j].YCP + 3 + "%";
-            slide[i].addText(order[i][j], { shape: pptx.shapes.OVAL, align: 'c', x: x1, y: y1, w: '2%', h: '3%', fill: '40b840', line: '000000', line_size: 0.5, font_size: 10 }
-            );
-            slide[i].addText(str[i][j], { x: x2, y: y2, font_size: 12 }
-            );
+            var x1 = inPercent(28 + (coordinates[i][j].XCP * 0.7));
+            var y1 = inPercent(19 + (coordinates[i][j].YCP * 0.7));
+            currentSlide.addText(order[i][j], { shape: pptx.shapes.OVAL, align: 'c', x: x1, y: y1, w: '2%', h: '3%', fill: 'F4D03F', line: '000000', line_size: 0.5, font_face: 'Calibri', font_size: 10 });
+            captionList.push({ text: str[i][j], options: { bullet: { type: 'number'}, color: 'ABABAB', font_face: 'Calibri', font_size: 11 } });
         }
 
-        //  }
-
+        currentSlide.addImage({ x: '27%', y: '17%', w: '70%', h: '70%', data: imgList.imageList[i].sourceString });
+        currentSlide.addText(
+            captionList, { x: '3%', y: '14%', w: '20%', h: 1.4, color: 'ABABAB', margin: 1 }
+        );
     }
-
-
 }
+
+function inPercent(input) {
+    return input + '%';
+}
+
 function removebtn() {
     $("#download").remove();
 }

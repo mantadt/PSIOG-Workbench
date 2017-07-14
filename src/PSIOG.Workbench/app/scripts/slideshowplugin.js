@@ -1,5 +1,6 @@
 ﻿angular.module('sbAdminApp').service('slideshowService', function ($http, $q, config) {
     this.getSlideshowJSON = function (flowchart, flow) {
+        console.log(flowchart, flow);
         var one = $http({
             method: 'GET',
             url: config.baseUrl + 'getFlowChartByID/' + flowchart,
@@ -33,9 +34,8 @@
 
                             for (var kL = 0; kL < json[jL].assets.length; kL++) {
                                 if (json[jL].assets[kL].assetType.toString().toUpperCase().indexOf('IMAGE') >= 0) {
-                                    var file = { fileId: json[jL].assets[kL].assetURL, coOrds: [] };
-                                    file.coOrds = fnGetCoordsForFileInBlock(json[jL].assets[kL].assetURL, Number(blocks[iL]), coOrds);
-                                    
+                                    var file = { fileId: json[jL].assets[kL].assetURL, stepDescription : json[jL].text , coOrds: [] };
+                                    file.coOrds = fnGetCoordsForFileInBlock(json[jL].assets[kL].assetURL, Number(blocks[iL]), coOrds);                                    
                                     result.coOrdinates.push(file);
                                 }
                             }

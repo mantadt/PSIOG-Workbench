@@ -1,7 +1,7 @@
 ﻿var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
 var ObjectId = require('mongodb').ObjectID;
-var url = 'mongodb://localhost:27017/WorkBench';
+var url = require('../../config').mongoConnection;
 
 exports.addFlowchart = function (req, res) {
     // Connect to the db

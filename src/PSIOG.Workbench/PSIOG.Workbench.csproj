@@ -79,6 +79,11 @@
     <Content Include="app\scripts\slideshowplugin.js" />
     <Content Include="app\scripts\vendor\jquery.blockUI.js" />
     <Content Include="app\scripts\ViewPresentation.js" />
+    <Content Include="app\scriptsNew\add-fc\add-fc.controller.js" />
+    <Content Include="app\scriptsNew\add-fc\add-fc.module.js" />
+    <Content Include="app\scriptsNew\common\common.module.js" />
+    <Content Include="app\scriptsNew\common\data.service.js" />
+    <Content Include="app\scriptsNew\common\flowchart.directive.js" />
     <Content Include="app\views\pages\generateTests.html" />
     <Content Include="app\img\ellipsis.gif" />
     <Content Include="app\img\logo.png" />
@@ -757,7 +762,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="app\assests\" />
+    <Folder Include="app\scriptsNew\modify-fc\" />
+    <Folder Include="app\scriptsNew\quality-fc\" />
+    <Folder Include="app\scriptsNew\usability-create-fc\" />
+    <Folder Include="app\scriptsNew\usability-view-fc\" />
+    <Folder Include="app\scriptsNew\view-fc\" />
     <Folder Include="app\scripts\directives\flowchart\view\" />
     <Folder Include="dist\bower_components\angular-animate\" />
     <Folder Include="dist\bower_components\angular-bootstrap\" />

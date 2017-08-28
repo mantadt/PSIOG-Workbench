@@ -10,6 +10,7 @@ var path = require('path');
 var data = require('./public/javascripts/data.js');
 var coordinates = require('./public/javascripts/ManageCoordinates.js');
 var flowChart = require('./public/javascripts/ManageFlowChart.js');
+var azureService = require('./public/javascripts/AzureStorage.js');
 var bodyParser = require('body-parser');
 var cors = require('cors');
 var router = express.Router();
@@ -77,6 +78,7 @@ app.get('/getFlowChartByID/:id', flowChart.getFlowChartByID);
 app.get('/getFlowChartByName/:id', flowChart.getFlowChartByName);
 app.get('/getFlowChartByFlowIdBlockId/:flowId/:blockId', flowChart.getFlowChartByFlowIdBlockId);
 app.post('/updateFlowchartByID', flowChart.updateFlowchartByID);
+app.post('/uploadFile', azureService.uploadBlob);
 
 //Pass formData with key:xmlaData and value as the XML string and returns object with results, nodes and links []
 app.post('/generateFromXml', function (req, res) {

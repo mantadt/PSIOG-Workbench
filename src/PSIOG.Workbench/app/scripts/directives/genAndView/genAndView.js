@@ -26,7 +26,7 @@ angular.module('sbAdminApp')
                     scope.jsonxmltoggle = !scope.jsonxmltoggle;
                 }
                 scope.ddlValueChanged = function () {
-                    console.log(scope.itemSelected);
+                    //console.log(scope.itemSelected);
                 }
                 scope.jsonfiles = ["1.json", "2.json"];
                 var testroutes = [];

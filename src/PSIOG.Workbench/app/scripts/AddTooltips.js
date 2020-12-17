@@ -20,13 +20,14 @@ $(document).ready(function () {
 
 
 function handleClick(event) {
+    //console.log(event);
     document.getElementById("EditScreen").style.zIndex = 999999;
     document.getElementById("EditScreen").style.display = "block";
     imageID = ImgListen.getAttribute("data-title");
     // var offset = $("#darkbox").offset;
-    var x = event.clientX - 24;//- offset.left;
-    var y = event.clientY - 24;// - offset.top;
-    console.log(x + "'" + y);
+    var x = event.offsetX; //Includes the offset of darkbox
+    var y = event.offsetY;
+   // console.log(x + "'" + y);
     var message = prompt("Enter tooltip text:");
     if (message != null) {
         if (message.length != 0) {
@@ -39,11 +40,27 @@ function handleClick(event) {
 }
 
 function saveList() {
-
+    var vcx, ycy;
+    //Obtain the dimensions of the Darkbox
+    var darkBoxElement = document.getElementById('darkbox');
+    var backgroundImage = new Image();
+    backgroundImage.src = darkBoxElement.style.backgroundImage.replace(/url\((['"])?(.*?)\1\)/gi, '$2').split(',');
+    //To do : Optimise for all image sizes - <, > 
+    //Correct image height and width if it is larger than the darkbox
+    if (backgroundImage.height > darkBoxElement.clientHeight) {
+        backgroundImage.width = backgroundImage.width * (darkBoxElement.clientHeight / backgroundImage.height);
+        backgroundImage.height = darkBoxElement.clientHeight;
+    }
+    //console.log('Darkbox height ' , darkBoxElement.clientHeight, 'Darkbox height', darkBoxElement.clientWidth);
+    //console.log(backgroundImage.height, backgroundImage.width);
+    
+    //Background image offset
     for (var i = 0; i < count; i++) {
-        // store messages and coordinates in json
-        var xcx = xcord[i] * 100 / window.innerWidth;
-        var ycy = ycord[i] * 100 / window.innerHeight;
+        //Calculate coordinates as a % of the images width
+        xcx = (xcord[i] - ((darkBoxElement.clientWidth - backgroundImage.width) / 2)) / backgroundImage.width * 100;
+        
+        ycy = (ycord[i] - ((darkBoxElement.clientHeight - backgroundImage.height) / 2)) / backgroundImage.height * 100;
+        //console.log(xcx, ycy);
         var cords = { "XCP": xcx, "YCP": ycy, "xc": xcord[i], "yc": ycord[i], "order": i + 1, "message": str[i] };
         coordinates.push(cords);
     }
@@ -65,6 +82,7 @@ function storeMessage(message, x, y, imageID) {
     var list = document.getElementById("list");
     var liEntry = message;
     xcord.push(x); ycord.push(y); str.push(message); imgs.push(imageID);
+    //console.log('xcord = ' + xcord);
     var newLI = document.createElement('li');
     var checkbox = document.createElement('input');
     checkbox.type = "checkbox";
@@ -129,7 +147,7 @@ function EditList() {
     var boxes = document.getElementsByClassName('box');
     var texts = document.getElementsByClassName('text');
     var len = boxes.length;
-    console.log(boxcount);
+    //console.log(boxcount);
     for (var i = 0; i < boxcount; i++) {
         box = boxes[i];
         txt = texts[i];
@@ -200,8 +218,8 @@ function AnimateList() {	//  Add tooltips to screen
         mark[j].style.background = "lawngreen";
         mark[j].style.textAlign = "center";
         mark[j].style.borderRadius = "50%";
-        mark[j].style.top = (ycord[j]) + 'px';
-        mark[j].style.left = (xcord[j] + 5) + 'px';
+        mark[j].style.top = (ycord[j] - 7.5) + 'px';//To Do - 15 pixel offset for Chrome scroll bar appearing at the bottom
+        mark[j].style.left = (xcord[j] - 7.5) + 'px';//Make sure the oval is centered on the point of click
         mark[j].innerHTML = j + 1;
         mark[j].dataToggle = 'tooltip';
         mark[j].title = str[j];
@@ -214,7 +232,7 @@ function AnimateList() {	//  Add tooltips to screen
     setTimeout(function () { $("div.oldMarksVPS.c" + guid).tooltip('hide') }, 2000);
 
     setTimeout(RemoveAnimate, 10000);
-    document.getElementById("anim").disabled = true;
+    //document.getElementById("anim").disabled = true;
 
 }
 
